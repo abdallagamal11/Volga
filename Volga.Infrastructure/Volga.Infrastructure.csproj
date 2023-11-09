@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="microsoft.aspnetcore.authentication.jwtbearer" Version="7.0.13" />
+    <PackageReference Include="microsoft.aspnetcore.identity" Version="2.2.0" />
+    <PackageReference Include="microsoft.aspnetcore.identity.entityframeworkcore" Version="7.0.13" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.13">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="microsoft.entityframeworkcore.sqlserver" Version="7.0.13" />
+    <PackageReference Include="microsoft.entityframeworkcore.tools" Version="7.0.13">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="microsoft.identitymodel.tokens" Version="7.0.3" />
+    <PackageReference Include="system.identitymodel.tokens.jwt" Version="7.0.3" />
+  </ItemGroup>
+
+</Project>
