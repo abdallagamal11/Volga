@@ -29,6 +29,11 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddIdentity<User, UserRole>().AddEntityFrameworkStores<VgContext>();
 
+builder.Services.AddAuthorization(options =>
+{
+	options.AddPolicy("AdminPolicy", p => p.RequireClaim(ClaimTypes.Role, "Admin"));
+});
+
 builder.Services.AddControllers();
 
 #region removethis
@@ -59,11 +64,6 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 app.UseAuthentication();
-
-builder.Services.AddAuthorization(options =>
-{
-	options.AddPolicy("AdminPolicy", p => p.RequireClaim(ClaimTypes.Role, "Admin"));
-});
 
 app.MapControllers();
 
