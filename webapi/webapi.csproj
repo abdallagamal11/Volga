@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Volga.Infrastructure\Volga.Infrastructure.csproj" />
+    <ProjectReference Include="..\Volga.Core\Volga.Core.csproj" />
     <ProjectReference Include="..\Volga.Infrastructure\Volga.Infrastructure.csproj" />
   </ItemGroup>
 
