@@ -1,3 +1,11 @@
 /* You can add global styles to this file, and also import other style files */
-@import "./assets/bootstrap.css"
+@import "./assets/bootstrap.css";
 
+.vg-btn
+{
+	-webkit-border-radius: 25px;
+	-moz-border-radius: 25px;
+	border-radius: 25px;
+	padding-left: 1.7rem;
+	padding-right: 1.7rem;
+}

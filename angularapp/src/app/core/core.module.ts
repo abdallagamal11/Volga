@@ -5,6 +5,6 @@ import { LoginFormModel } from './Models/login-form-model';
 @NgModule({
   declarations: [],
   imports: [CommonModule],
-  exports: [LoginFormModel],
+  exports: [],
 })
-export class CoreModule {}
+export class CoreModule { }

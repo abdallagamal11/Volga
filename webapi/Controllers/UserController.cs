@@ -31,6 +31,7 @@ public class UserController : BaseAPIController
 	[HttpPost("Login")]
 	public async Task<IActionResult> Login(LoginDto loginDto)
 	{
+		return NotFound();
 		if (!ModelState.IsValid) return BadRequest(ModelState);
 		TokenDto? tokenDto = await _authService.AuthenticateUserAsync(loginDto.Username, loginDto.Password, loginDto.IsPersistant);
 		if (tokenDto == null) return BadRequest(ModelState);
