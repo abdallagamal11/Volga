@@ -12,4 +12,6 @@ public class VgUser : IdentityUser<int>
 	public string LastName { get; set; } = string.Empty;
 	public Gender Gender { get; set; }
 	public DateTime? BirthDate { get; set; }
+	[StringLength(255)]
+	public string Address { get; set; } = string.Empty;
 }

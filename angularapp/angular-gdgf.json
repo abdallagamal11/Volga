@@ -68,6 +68,7 @@
           },
           "defaultConfiguration": "development",
           "options": {
+            "proxyConfig": "src/proxy.conf.js",
             "sslKey": "./ssl/localhost.key",
             "sslCert": "./ssl/localhost.crt"
           }
@@ -93,13 +94,14 @@
             "styles": [
               "src/styles.css"
             ],
-            "scripts": []
+            "scripts": [],
+            "karmaConfig": "karma.conf.js"
           }
         }
       }
     }
   },
   "cli": {
-    "analytics": "eda4e695-b8e9-43c3-aa5a-5163df4c5462"
+    "analytics": false
   }
 }

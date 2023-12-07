@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Volga.Core.Dtos;
 using Volga.Core.Services;
+using Volga.Core.Validators.Attributes;
 
 namespace webapi.Controllers;
 
@@ -14,15 +16,18 @@ public class UserController : BaseAPIController
 		_authService = authService;
 	}
 
-	[Authorize]
 	[HttpGet("Profile")]
+	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	public async Task<IActionResult> Profile()
 	{
+		ProfileDto? profileDto = await _authService.GetCurrentUserProfileAsync();
+		if (profileDto == null) return Unauthorized();
 
-		return Ok();
+
+		return Ok(profileDto);
 	}
 
-	[AllowAnonymous]
+	[AllowAnonymousOnly]
 	[HttpPost("Login")]
 	public async Task<IActionResult> Login(LoginDto loginDto)
 	{
@@ -33,7 +38,7 @@ public class UserController : BaseAPIController
 		return Ok(tokenDto);
 	}
 
-	[AllowAnonymous]
+	[AllowAnonymousOnly]
 	[HttpPost("Register")]
 	public async Task<IActionResult> Register(RegisterDto registerDto)
 	{

@@ -1,7 +1,9 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using System.Globalization;
 using System.Security.Claims;
 using System.Text;
@@ -25,14 +27,36 @@ builder.Services.AddDbContext<VgContext>(
 #endregion
 
 #region Authentication
+
+builder.Services.AddIdentity<VgUser, VgUserRole>(options =>
+{
+	options.Password.RequireUppercase = true;
+	options.Password.RequireLowercase = true;
+	options.Password.RequireNonAlphanumeric = true;
+	options.Password.RequiredLength = 6;
+	options.User.RequireUniqueEmail = true;
+
+	options.Lockout.MaxFailedAccessAttempts = VgSettings.User.MaxFailedAccessAttempts;
+	options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(VgSettings.User.LockoutTimeSpanInMinutes);
+
+}).AddEntityFrameworkStores<VgContext>();
+
+
+builder.Services.AddAuthorization(options =>
+{
+	options.AddPolicy("AdminPolicy", p => p.RequireClaim(ClaimTypes.Role, "Admin"));
+});
+
 builder.Services
 	.AddAuthentication(options =>
 	{
-		options.DefaultAuthenticateScheme = "Default";
-		options.DefaultChallengeScheme = "Default"; // what action to do when unauthorized
+		options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+		options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+		options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+
 	})
 	.AddJwtBearer(
-		"Default",
+		JwtBearerDefaults.AuthenticationScheme,
 		options =>
 		{
 			byte[] keyInBytes = Encoding.ASCII.GetBytes(builder.Configuration.GetValue<string>("Jwt:SecretKey")!);
@@ -50,23 +74,6 @@ builder.Services
 		}
 	);
 
-builder.Services.AddIdentity<VgUser, VgUserRole>(options =>
-{
-	options.Password.RequireUppercase = true;
-	options.Password.RequireLowercase = true;
-	options.Password.RequireNonAlphanumeric = true;
-	options.Password.RequiredLength = 6;
-	options.User.RequireUniqueEmail = true;
-
-	options.Lockout.MaxFailedAccessAttempts = VgSettings.User.MaxFailedAccessAttempts;
-	options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(VgSettings.User.LockoutTimeSpanInMinutes);
-
-}).AddEntityFrameworkStores<VgContext>();
-
-builder.Services.AddAuthorization(options =>
-{
-	options.AddPolicy("AdminPolicy", p => p.RequireClaim(ClaimTypes.Role, "Admin"));
-});
 #endregion
 
 builder.Services.AddControllers();
@@ -74,7 +81,34 @@ builder.Services.AddControllers();
 #region Swagger
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(swagger =>
+{
+	swagger.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
+	{
+		Name = "Authorization",
+		Type = SecuritySchemeType.ApiKey,
+		Scheme = "Bearer",
+		BearerFormat = "JWT",
+		In = ParameterLocation.Header,
+		Description = "JWT Authorization header using the Bearer scheme. \r\n\r\n Enter 'Bearer' [space] and then your token in the text input below.\r\n\r\nExample: \"Bearer 12345abcdef\"",
+	});
+	swagger.AddSecurityRequirement(new OpenApiSecurityRequirement
+	{
+		{
+			  new OpenApiSecurityScheme
+				{
+					Reference = new OpenApiReference
+					{
+						Type = ReferenceType.SecurityScheme,
+						Id = "Bearer"
+					}
+				},
+				new string[] {}
+		}
+	});
+});
+//To Enable authorization using Swagger (JWT)
+
 #endregion
 
 
@@ -85,6 +119,18 @@ builder.Services.AddLocalization(options => options.ResourcesPath = "Resources")
 
 builder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 builder.Services.AddTransient<AuthService>();
+
+builder.Services.AddCors(options =>
+{
+	options.AddPolicy("AllowAngularApp", builder =>
+	{
+		builder
+		.SetIsOriginAllowed(x => true)
+		.AllowAnyHeader()
+		.AllowAnyMethod()
+		.AllowCredentials();
+	});
+});
 
 // =====================================
 
@@ -104,7 +150,7 @@ if (app.Environment.IsDevelopment())
 }
 #endregion
 
-app.UseCors();
+app.UseCors("AllowAngularApp");
 
 app.UseHttpsRedirection();
 
@@ -121,8 +167,9 @@ app.UseRequestLocalization(new RequestLocalizationOptions
 	SupportedUICultures = supportedCultures
 });
 
-app.UseAuthorization();
 app.UseAuthentication();
+app.UseAuthorization();
+
 
 app.MapControllers();
 

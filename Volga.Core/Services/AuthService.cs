@@ -157,7 +157,7 @@ public class AuthService
 		return new TokenDto()
 		{
 			Token = token,
-			Expire = expiration
+			Expire = expirationTimestamp
 		};
 	}
 
@@ -168,5 +168,24 @@ public class AuthService
 
 		VgUser? user = await _userManager.GetUserAsync(claimsPrincipal);
 		return user;
+	}
+
+	public async Task<ProfileDto?> GetCurrentUserProfileAsync()
+	{
+		VgUser? user = await GetCurrentUserAsync();
+		if (user == null) return null;
+
+		return new ProfileDto()
+		{
+			Id = user.Id,
+			Username = user.UserName,
+			FirstName = user.FirstName,
+			LastName = user.LastName,
+			Email = user.Email,
+			Gender = user.Gender,
+			BirthDate = user.BirthDate,
+			PhoneNumber = user.PhoneNumber,
+			Address = user.Address
+		};
 	}
 }

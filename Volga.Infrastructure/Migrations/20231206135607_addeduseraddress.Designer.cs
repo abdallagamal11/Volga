@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Volga.Infrastructure;
 
@@ -11,9 +12,11 @@ using Volga.Infrastructure;
 namespace Volga.Infrastructure.Migrations
 {
     [DbContext(typeof(VgContext))]
-    partial class VgContextModelSnapshot : ModelSnapshot
+    [Migration("20231206135607_addeduseraddress")]
+    partial class addeduseraddress
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
