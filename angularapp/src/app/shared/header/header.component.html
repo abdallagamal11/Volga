@@ -1,4 +1,19 @@
 <p>header works!</p>
-<a [routerLink]="['/account/login']" routerLinkActive="router-link-active"
-  >Login</a
+<a
+	[routerLink]="['/account/login']"
+	routerLinkActive="router-link-active"
+	translate
+	>Login</a
+>
+-
+<a [routerLink]="['/account/Register']" routerLinkActive="active" translate
+	>Register</a
+>
+-
+<a
+	[routerLink]="['/account/profile']"
+	routerLinkActive="active"
+	translate
+	*ngIf="isAuthenticated"
+	>Profile</a
 >

@@ -1,0 +1,258 @@
+<p>register works!</p>
+<form novalidate [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+	<div class="form-group register-form-group">
+		<label for="firstName">First Name</label>
+		<input
+			type="text"
+			name="firstName"
+			id="firstName"
+			class="form-control"
+			[ngClass]="{
+				'is-invalid':
+					controls.firstName.touched && controls.firstName.invalid
+			}"
+			placeholder="First Name"
+			[formControl]="controls.firstName"
+		/>
+		<div
+			class="invalid-feedback"
+			[ngClass]="{
+				'd-block':
+					controls.firstName.touched && controls.firstName.invalid
+			}"
+		>
+			This field is required
+		</div>
+	</div>
+	<div class="form-group register-form-group">
+		<label for="lastName">Last Name</label>
+		<input
+			type="text"
+			name="lastName"
+			id="lastName"
+			class="form-control"
+			[ngClass]="{
+				'is-invalid':
+					controls.lastName.touched && controls.lastName.invalid
+			}"
+			placeholder="Last Name"
+			[formControl]="controls.lastName"
+		/>
+		<div
+			class="invalid-feedback"
+			[ngClass]="{
+				'd-block':
+					controls.lastName.touched && controls.lastName.invalid
+			}"
+		>
+			This field is required
+		</div>
+	</div>
+
+	<div class="form-group register-form-group">
+		<label for="username">Username:</label>
+		<input
+			type="text"
+			name="username"
+			id="username"
+			placeholder="Username"
+			class="form-control"
+			[formControl]="controls.username"
+			[ngClass]="{
+				'is-invalid':
+					controls.username.touched && controls.username.invalid,
+				'is-valid':
+					controls.username.touched && this.controls.username.valid
+			}"
+		/>
+		<div
+			class="invalid-feedback d-block"
+			*ngIf="controls.username.errors && controls.username.touched"
+		>
+			<span *ngIf="controls.username.errors?.['required']">
+				This field is required
+			</span>
+			<span *ngIf="controls.username.errors?.['minlength']">
+				Username can't be less than
+				{{ controls.username.errors["minlength"].requiredLength }}
+				characters.
+			</span>
+			<span *ngIf="controls.username.errors?.['maxlength']">
+				Username can't be more than
+				{{ controls.username.errors["maxlength"].requiredLength }}
+				characters.
+			</span>
+			<span *ngIf="controls.username.errors?.['usernameTaken']"
+				>This user name exists before</span
+			>
+			<span *ngIf="controls.username.errors?.['pattern']"
+				>Username must be alphanumeric. Only 0-9 Aa-Zz _ & - are allowed
+				here.</span
+			>
+		</div>
+	</div>
+
+	<div class="form-group register-form-group">
+		<label for="Password">Password:</label>
+		<input
+			type="password"
+			class="form-control"
+			id="Password"
+			placeholder="Password"
+			[formControl]="controls.password"
+			[ngClass]="{
+				'is-invalid':
+					controls.password.touched && controls.password.invalid,
+				'is-valid': controls.password.touched && controls.password.valid
+			}"
+		/>
+		<div
+			class="invalid-feedback d-block"
+			*ngIf="controls.password.touched && controls.password.invalid"
+		>
+			<div
+				*ngIf="controls.password.errors?.['required']"
+				translate="account.fieldrequired"
+			>
+				This Field is required
+			</div>
+			<div *ngIf="controls.password.hasError('pattern')">
+				Password must have at least one
+				{{ passwordRequirementsPhrase }}!
+			</div>
+			<div *ngIf="controls.password.hasError('minlength')">
+				Password must be at least
+				{{ controls.password.errors?.["minlength"].requiredLength }}
+				characters!
+			</div>
+		</div>
+	</div>
+
+	<div class="form-group register-form-group">
+		<label for="confirmPassword">Confirm Password:</label>
+		<input
+			type="password"
+			class="form-control"
+			id="confirmPassword"
+			placeholder="confirm Password"
+			[formControl]="controls.confirmPassword"
+			[ngClass]="{
+				'is-invalid':
+					controls.confirmPassword.touched &&
+					controls.confirmPassword.invalid,
+				'is-valid':
+					controls.confirmPassword.touched &&
+					controls.confirmPassword.valid
+			}"
+		/>
+		<div
+			class="invalid-feedback d-block"
+			*ngIf="
+				controls.confirmPassword.touched &&
+				controls.confirmPassword.invalid
+			"
+		>
+			<div *ngIf="controls.confirmPassword.errors?.['required']">
+				This Field is required
+			</div>
+			<div *ngIf="controls.confirmPassword.errors?.['confirmMismatch']">
+				Confirm password must match password
+			</div>
+		</div>
+	</div>
+
+	<div class="form-group register-form-group">
+		<label for="email">Email:</label>
+		<input
+			type="text"
+			name="email"
+			id="email"
+			class="form-control"
+			placeholder="john@doe.com"
+			[formControl]="controls.email"
+			[ngClass]="{
+				'is-invalid': controls.email.touched && controls.email.invalid,
+				'is-valid': controls.email.touched && this.controls.email.valid
+			}"
+		/>
+		<div
+			class="invalid-feedback d-block"
+			*ngIf="
+				controls.email.invalid &&
+				(controls.email.touched || controls.email.dirty)
+			"
+		>
+			<span *ngIf="controls.email.errors?.['required']">
+				This field is required
+			</span>
+			<span *ngIf="controls.email.errors?.['email']"
+				>Email address should be like john&commat;doe.com</span
+			>
+			<span *ngIf="controls.email.errors?.['emailTaken']"
+				>This email exists before</span
+			>
+		</div>
+		<div
+			class="valid-feedback d-block"
+			*ngIf="
+				controls.email.touched &&
+				this.controls.email.valid &&
+				!this.controls.email.errors &&
+				!this.controls.email.errors?.['emailTaken']
+			"
+		>
+			Valid Email!
+		</div>
+	</div>
+
+	<div class="form-group register-form-group">
+		<label for="gender">Gender</label>
+		<select
+			class="form-select"
+			[ngClass]="{
+				'is-invalid': controls.gender.touched && controls.gender.invalid
+			}"
+			[formControl]="controls.gender"
+		>
+			<option value="-1" [selected] disabled>Select one</option>
+			<option *ngFor="let gender of genders" [ngValue]="gender.value">
+				{{ "GenderList." + gender.key | translate }}
+			</option>
+		</select>
+		<div
+			class="invalid-feedback"
+			*ngIf="controls.gender.touched && controls.gender.errors"
+		>
+			<div *ngIf="controls.gender.errors?.['required']">
+				Invalid Gender Selection
+			</div>
+		</div>
+	</div>
+
+	<div class="form-group register-form-group">
+		<label for="birthDate" translate>Birthdate</label>
+		<input
+			type="date"
+			name="birthDate"
+			id="birthDate"
+			class="form-control"
+			[formControl]="controls.birthDate"
+			[ngClass]="{
+				'is-invalid':
+					controls.birthDate.touched && controls.birthDate.invalid
+			}"
+		/>
+	</div>
+
+	<!-- Submit Button -->
+	<div class="register-form-buttons">
+		<button
+			type="submit"
+			class="btn btn-primary vg-btn"
+			loginForm="ngForm"
+			[disabled]="registerForm.invalid"
+		>
+			{{ "Register" | translate | uppercase }}
+		</button>
+	</div>
+</form>

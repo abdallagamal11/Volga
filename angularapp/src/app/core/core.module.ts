@@ -1,10 +1,18 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LoginFormModel } from './Models/login-form-model';
+import { AuthService } from './services/auth.service';
+import { AutofillMonitorDirective } from './directives/autofill-monitor.directive';
 
 @NgModule({
-  declarations: [],
-  imports: [CommonModule],
-  exports: [],
+	declarations: [
+		AutofillMonitorDirective
+	],
+	imports: [CommonModule],
+	exports: [
+		AutofillMonitorDirective
+	],
+	providers: [
+		AuthService
+	]
 })
 export class CoreModule { }

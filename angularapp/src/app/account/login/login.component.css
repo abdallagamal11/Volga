@@ -14,6 +14,13 @@
 
 .form-check-label
 {
+	-webkit-user-select: none;
+	user-select: none;
+}
+
+img
+{
+	-webkit-user-select: none;
 	user-select: none;
 }
 
@@ -26,6 +33,11 @@
 .forgot-password-group
 {
 	display: flex;
+}
+
+.remember-me-group label, .remember-me-group input
+{
+	cursor: pointer;
 }
 
 @media screen and (max-width: 600px)

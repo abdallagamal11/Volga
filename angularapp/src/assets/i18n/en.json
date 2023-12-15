@@ -1,0 +1,20 @@
+{
+	"Birthdate": "Birth Date",
+	"Gender": "Gender",
+	"GenderList": {
+		"Female": "Female",
+		"Male": "Male"
+	},
+	"Login": "Login",
+	"Profile": "Profile",
+	"Register": "Register",
+	"account": {
+		"fieldrequired": "This field is required!",
+		"password": {
+			"digits": "digits",
+			"lowercase": "lowercase letter",
+			"specialletter": "special character",
+			"uppercase": "uppercase letter"
+		}
+	}
+}

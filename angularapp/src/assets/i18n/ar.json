@@ -1,0 +1,13 @@
+{
+	"account.fieldrequired": "هذه الخانة مطلوبه!",
+	"account.password.digits": "أرقام",
+	"account.password.lowercase": "حرف صغير",
+	"account.password.specialletter": "حرف خاص",
+	"account.password.uppercase": ".حرف كبير",
+	"Birthdate": "تاريخ الميلاد",
+	"Gender": "النوع",
+	"GenderList.Female": "انثى",
+	"GenderList.Male": "ذكر",
+	"Login": "",
+	"Register": "تسجيل جديد"
+}

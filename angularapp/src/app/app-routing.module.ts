@@ -6,9 +6,10 @@ import { ErrorNotFoundComponent } from './shared/error-not-found/error-not-found
 import { ForbiddenComponent } from './shared/forbidden/forbidden.component';
 
 const routes: Routes = [
-	{ path: 'account', loadChildren: () => AccountModule },
-	{ path: '', component: HomeComponent },
+	{ path: 'account', loadChildren: () => import('./account/account.module').then(m => m.AccountModule) },
 	{ path: 'forbidden', component: ForbiddenComponent },
+	{ path: '', component: HomeComponent },
+	{ path: '404', component: ErrorNotFoundComponent },
 	{ path: '**', component: ErrorNotFoundComponent }
 ];
 

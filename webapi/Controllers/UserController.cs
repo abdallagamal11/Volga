@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 using Volga.Core.Dtos;
 using Volga.Core.Services;
 using Volga.Core.Validators.Attributes;
@@ -23,7 +24,6 @@ public class UserController : BaseAPIController
 		ProfileDto? profileDto = await _authService.GetCurrentUserProfileAsync();
 		if (profileDto == null) return Unauthorized();
 
-
 		return Ok(profileDto);
 	}
 
@@ -31,7 +31,6 @@ public class UserController : BaseAPIController
 	[HttpPost("Login")]
 	public async Task<IActionResult> Login(LoginDto loginDto)
 	{
-		return NotFound();
 		if (!ModelState.IsValid) return BadRequest(ModelState);
 		TokenDto? tokenDto = await _authService.AuthenticateUserAsync(loginDto.Username, loginDto.Password, loginDto.IsPersistant);
 		if (tokenDto == null) return BadRequest(ModelState);
@@ -46,6 +45,23 @@ public class UserController : BaseAPIController
 		if (!ModelState.IsValid) return BadRequest(ModelState);
 		bool success = await _authService.RegisterUserAsync(registerDto);
 		if (!success) return BadRequest(ModelState);
-		return Ok();
+		TokenDto? tokenDto = await _authService.AuthenticateUserAsync(registerDto.Username, registerDto.Password, false);
+		return Ok(tokenDto);
+	}
+
+	[HttpPost("Validation/CheckEmail")]
+	public async Task<IActionResult> CheckEmail(string email)
+	{
+		if (!ModelState.IsValid) return BadRequest(false);
+		if (await _authService.IsEmailExistent(email)) return BadRequest(false);
+		else return Ok(JsonSerializer.Serialize(true));
+	}
+
+	[HttpPost("Validation/CheckUsername")]
+	public async Task<IActionResult> CheckUsername(string username)
+	{
+		if (!ModelState.IsValid) return BadRequest(false);
+		if (await _authService.IsUserNameExistent(username)) return BadRequest(false);
+		else return Ok(JsonSerializer.Serialize(true));
 	}
 }

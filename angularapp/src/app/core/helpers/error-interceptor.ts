@@ -18,7 +18,8 @@ export class ErrorInterceptor implements HttpInterceptor
 		{
 			if (err.status === 403) this.handleForbidden();
 			if (err.status === 404) this.handleNotFound();
-			const error = err.error?.message || err.statusText;
+			if (err.status === 401) this.handleUnauthorized();
+			const error = err;
 			return throwError(error);
 		}));
 	}
@@ -29,6 +30,10 @@ export class ErrorInterceptor implements HttpInterceptor
 	}
 	handleNotFound(): void
 	{
-		this.router.navigate(['/errornotfound'], { queryParams: { returnUrl: this.router.url } });
+		this.router.navigate(['/404'], { queryParams: { returnUrl: this.router.url } });
+	}
+	handleUnauthorized(): void
+	{
+		this.router.navigate(['/account', 'login'], { queryParams: { returnUrl: this.router.url } });
 	}
 }

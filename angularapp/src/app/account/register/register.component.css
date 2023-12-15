@@ -1,0 +1,55 @@
+.register-form-group
+{
+	width: 50%;
+	margin: 0 auto;
+	margin: 1rem auto;
+}
+
+.register-form-buttons
+{
+	width: 50%;
+	margin: 1.65rem auto;
+	text-align: center;
+}
+
+.form-check-label
+{
+	-webkit-user-select: none;
+	user-select: none;
+}
+
+img
+{
+	-webkit-user-select: none;
+	user-select: none;
+}
+
+.remember-forogt-group
+{
+	display: flex;
+	justify-content: space-between;
+}
+
+.forgot-password-group
+{
+	display: flex;
+}
+
+.remember-me-group label, .remember-me-group input
+{
+	cursor: pointer;
+}
+
+.invalid-feedback > span
+{
+	display: block;
+}
+
+@media screen and (max-width: 600px)
+{
+	.remember-forogt-group
+	{
+		flex-direction: column;
+		align-items: center;
+	}
+}

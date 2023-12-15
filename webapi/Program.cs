@@ -111,11 +111,7 @@ builder.Services.AddSwaggerGen(swagger =>
 
 #endregion
 
-
 builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
-//builder.Services.AddMvc()
-//		.AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
-//		.AddDataAnnotationsLocalization();
 
 builder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 builder.Services.AddTransient<AuthService>();
@@ -154,11 +150,10 @@ app.UseCors("AllowAngularApp");
 
 app.UseHttpsRedirection();
 
-
 var supportedCultures = new[]
 {
-		new CultureInfo("en-US"),
-		// Add other supported cultures here
+	new CultureInfo("en-US"),
+	// Add other supported cultures here
 };
 app.UseRequestLocalization(new RequestLocalizationOptions
 {
@@ -169,7 +164,6 @@ app.UseRequestLocalization(new RequestLocalizationOptions
 
 app.UseAuthentication();
 app.UseAuthorization();
-
 
 app.MapControllers();
 
