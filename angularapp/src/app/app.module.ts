@@ -2,24 +2,26 @@ import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule } from '@angular/common
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
-import { HomeComponent } from './home/home.component';
 import { AppRoutingModule } from './app-routing.module';
 import { ErrorInterceptor } from './core/helpers/error-interceptor';
 import { SharedModule } from './shared/shared.module';
 import { CoreModule } from './core/core.module';
-import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { LazyTranslateLoader } from './core/helpers/lazy-translate-loader';
 import { AuthHttpInterceptor } from './core/helpers/auth-http-interceptor';
 import { LowerCaseUrlSerializerProvider } from './core/helpers/lowercase-url-serializer';
+import { AuthService } from './core/services/auth.service';
+import { CultureService } from './core/services/culture.service';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
 	declarations: [
 		AppComponent,
-		HomeComponent,
 	],
 	imports: [
 		BrowserModule,
+		BrowserAnimationsModule,
 		AppRoutingModule,
 		SharedModule,
 		CoreModule,
@@ -31,7 +33,7 @@ import { LowerCaseUrlSerializerProvider } from './core/helpers/lowercase-url-ser
 				//useFactory: HttpLoaderFactory,
 				deps: [HttpClient]
 			}
-		}),
+		})
 	],
 	providers: [
 		[
@@ -46,6 +48,9 @@ import { LowerCaseUrlSerializerProvider } from './core/helpers/lowercase-url-ser
 				useClass: AuthHttpInterceptor,
 				multi: true
 			},
+			AuthService,
+			TranslateService,
+			CultureService
 		]
 	],
 	bootstrap: [AppComponent]

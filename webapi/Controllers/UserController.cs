@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
-using Volga.Core.Dtos;
+using Volga.Core.Dtos.User;
 using Volga.Core.Services;
 using Volga.Core.Validators.Attributes;
 
@@ -19,12 +19,25 @@ public class UserController : BaseAPIController
 
 	[HttpGet("Profile")]
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-	public async Task<IActionResult> Profile()
+	public async Task<IActionResult> GetProfile()
 	{
 		ProfileDto? profileDto = await _authService.GetCurrentUserProfileAsync();
 		if (profileDto == null) return Unauthorized();
 
 		return Ok(profileDto);
+	}
+
+	[HttpPatch("Profile")]
+	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+	public async Task<IActionResult> UpdateProfile(ProfileDto? profileDto)
+	{
+		if (profileDto == null) return BadRequest(ModelState);
+
+		ProfileDto? profileData = await _authService.UpdateCurrentUserProfileAsync(profileDto);
+		if (profileData == null) return BadRequest(ModelState);
+
+		profileData.Password = "";
+		return Ok(profileData);
 	}
 
 	[AllowAnonymousOnly]

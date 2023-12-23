@@ -1,13 +1,53 @@
 {
+	"account": {
+		"birthdate": "تاريخ الميلاد",
+		"email": "البريد الإلكتروني",
+		"enter_password_to_confirm": "أدخل كلمة المرور الخاصة بك للتأكيد",
+		"fieldrequired": "هذه الخانة مطلوبه!",
+		"firstName": "الاسم الاول",
+		"gender": "النوع",
+		"invalidGenderSelection": "نوع غير صحيح",
+		"invalidPassword": "رقم سري خاطئ!",
+		"lastName": "الاسم الاخير",
+		"password": {
+			"digits": "أرقام",
+			"lowercase": "حرف صغير",
+			"specialletter": "حرف خاص",
+			"uppercase": ".حرف كبير"
+		},
+		"password.digits": "",
+		"password.lowercase": "",
+		"password.specialletter": "",
+		"password.uppercase": "",
+		"update_your_profile_data": "تحديث بيانات الملف الشخصي",
+		"updateProfile": "تحديث الملف الشخصي",
+		"username": "اسم المستخدم"
+	},
 	"account.fieldrequired": "هذه الخانة مطلوبه!",
 	"account.password.digits": "أرقام",
 	"account.password.lowercase": "حرف صغير",
 	"account.password.specialletter": "حرف خاص",
-	"account.password.uppercase": ".حرف كبير",
+	"account.password.uppercase": "حرف كبير",
 	"Birthdate": "تاريخ الميلاد",
 	"Gender": "النوع",
+	"GenderList": {
+		"Female": "إناثا",
+		"Male": "الذكر"
+	},
 	"GenderList.Female": "انثى",
 	"GenderList.Male": "ذكر",
-	"Login": "",
+	"general": {
+		"account": "الحساب",
+		"all_categories": "كل الاقسام",
+		"hello_x": "مرحبًا ، {{ username }}",
+		"language": "لغة",
+		"login": "تسجيل الدخول",
+		"profile": "الملف الشخصي",
+		"register": "تسجيل",
+		"search": "البحث"
+	},
+	"INVALID_GENDER_SELECTION": "Invalid Gender Selection",
+	"Login": "تسجيل الدخول",
+	"Profile": "الملف الشخصي",
 	"Register": "تسجيل جديد"
 }

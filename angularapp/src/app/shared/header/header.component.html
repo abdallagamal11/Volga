@@ -1,19 +1,155 @@
-<p>header works!</p>
-<a
-	[routerLink]="['/account/login']"
-	routerLinkActive="router-link-active"
-	translate
-	>Login</a
->
--
-<a [routerLink]="['/account/Register']" routerLinkActive="active" translate
-	>Register</a
->
--
-<a
-	[routerLink]="['/account/profile']"
-	routerLinkActive="active"
-	translate
-	*ngIf="isAuthenticated"
-	>Profile</a
->
+<!-- TOP NAVBAR -->
+<div class="top-navbar py-0">
+	<nav class="navbar navbar-light bg-white py-1">
+		<div class="container">
+			<div class="dropdown justify-content-start">
+				<button
+					class="dropdown-toggle btn border-none lang-btn"
+					type="button"
+					data-bs-toggle="dropdown"
+					aria-expanded="false"
+				>
+					{{ "general.language" | translate }}: {{ language }}
+				</button>
+				<ul class="dropdown-menu">
+					<li *ngFor="let lang of languageList">
+						<a
+							class="dropdown-item"
+							(click)="useLanguage($event, lang.key)"
+							href="#"
+							[ngClass]="{ active: lang.key === language }"
+							>{{ lang.value }}</a
+						>
+					</li>
+				</ul>
+			</div>
+
+			<div class="justify-content-end d-flex flex-row">
+				<div
+					class="dropdown navbar-block-item"
+					*ngIf="!isAuthenticated"
+				>
+					<button
+						class="dropdown-toggle btn border-none user-btn"
+						type="button"
+						data-bs-toggle="dropdown"
+						aria-expanded="false"
+					>
+						<i class="bi bi-person"></i>
+						{{ "general.account" | translate }}
+					</button>
+					<ul class="dropdown-menu dropdown-menu-lg-end">
+						<li>
+							<a
+								class="dropdown-item"
+								[routerLink]="['/account', 'login']"
+								>{{ "general.login" | translate }}</a
+							>
+							<a
+								class="dropdown-item"
+								[routerLink]="['/account', 'register']"
+								>{{ "general.register" | translate }}</a
+							>
+						</li>
+					</ul>
+				</div>
+				<div
+					class="dropdown account-dropdown navbar-block-item"
+					*ngIf="isAuthenticated"
+				>
+					<button
+						class="dropdown-toggle btn border-none user-btn"
+						type="button"
+						data-bs-toggle="dropdown"
+						aria-expanded="false"
+					>
+						<i class="bi bi-person"></i>
+						{{
+							"general.hello_x"
+								| translate
+									: { username: currentUser?.firstName }
+						}}
+					</button>
+					<ul class="dropdown-menu dropdown-menu-lg-end">
+						<li>
+							<a
+								class="dropdown-item"
+								[routerLink]="['/account', 'profile']"
+								>{{ "general.profile" | translate }}</a
+							>
+							<a
+								class="dropdown-item"
+								[routerLink]="['/account', 'address']"
+								>{{ "Your Address" | translate }}</a
+							>
+							<a
+								class="dropdown-item"
+								[routerLink]="['wishlist']"
+								>{{ "Your Wishlist" | translate }}</a
+							>
+							<a
+								class="dropdown-item"
+								[routerLink]="['account', 'logout']"
+								>{{ "Sign Out" | translate }}</a
+							>
+						</li>
+					</ul>
+				</div>
+
+				<div class="navbar-block-item">
+					<button class="btn cart-btn border-none" type="button">
+						<i class="bi bi-cart"></i>
+						{{ "general.cart" | translate }}
+					</button>
+				</div>
+			</div>
+		</div>
+	</nav>
+</div>
+
+<!-- Search Bar -->
+
+<div class="search-navbar">
+	<nav class="navbar navbar-light bg-white">
+		<div class="container">
+			<a class="navbar-brand" [routerLink]="['/']">
+				<img
+					src="/assets/img/brand.svg"
+					alt=""
+					width="35"
+					height="35"
+					class="d-inline-block align-text-top"
+				/>
+				Volga
+			</a>
+			<div class="d-flex search-bar">
+				<div
+					class="search-input-group input-group mx-auto form-outline"
+				>
+					<select
+						class="input-group-text form-select category-list"
+						*ngIf="parentCategoryList !== null"
+					>
+						<option value="">
+							{{ "general.all_categories" | translate }}
+						</option>
+						<option
+							*ngFor="let category of parentCategoryList"
+							[value]="category.id"
+						>
+							{{ category.name | translate }}
+						</option>
+					</select>
+					<input
+						class="form-control"
+						type="search"
+						placeholder="{{ 'general.search' | translate }}"
+					/>
+					<button class="btn border btn-light" type="submit">
+						<i class="bi bi-search"></i>
+					</button>
+				</div>
+			</div>
+		</div>
+	</nav>
+</div>

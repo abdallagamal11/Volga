@@ -2,8 +2,7 @@ import { Injectable } from '@angular/core';
 import { LoginModel } from '../models/login-model';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { TokenModel } from '../models/token-model';
-import { Observable, catchError, map, of } from 'rxjs';
-import { query } from '@angular/animations';
+import { BehaviorSubject, Observable, Subject, catchError, map, of, shareReplay, throwError } from 'rxjs';
 import { RegisterModel } from '../models/register-model';
 import { environment } from 'src/app/environment';
 import { ProfileModel } from '../models/profile-model';
@@ -14,7 +13,45 @@ import { ProfileModel } from '../models/profile-model';
 export class AuthService
 {
 	private loggedIn = false;
+	private isLoggedInSubject = new BehaviorSubject<boolean>(false);
+	public isLoggedIn$ = this.isLoggedInSubject.asObservable();
+
+	public user: ProfileModel | null = null;
+	private userRequestSent = false;
+
 	constructor(private http: HttpClient) { }
+
+	get currentUser(): ProfileModel | null
+	{
+		if (this.loggedIn == false || this.userRequestSent) return null;
+		if (this.user != null) return this.user;
+
+		this.userRequestSent = true;
+		this.getProfile().subscribe(result =>
+		{
+			this.currentUser = result;
+			this.userRequestSent = false;
+		});
+		return this.user;
+	}
+
+	set currentUser(value: ProfileModel | null)
+	{
+		this.user = value;
+	}
+
+	setAuthStatus(value: boolean): void
+	{
+		if (value == false) this.currentUser = null;
+		this.loggedIn = value;
+		this.isLoggedInSubject.next(value);
+		this.currentUser;
+	}
+
+	getAuthenticatedObservable(): Observable<boolean>
+	{
+		return this.isLoggedInSubject.asObservable();
+	}
 
 	login(loginModel: LoginModel): Observable<boolean>
 	{
@@ -32,21 +69,22 @@ export class AuthService
 		}).pipe(
 			map((result) =>
 			{
+
 				if (result.token != null)
 				{
-					this.loggedIn = true;
+					this.setAuthStatus(true);
 					this.signIn(result.token, result.expire);
 					return true;
 				}
 				else
 				{
-					this.loggedIn = false;
-					return false
+					this.setAuthStatus(false);
+					return false;
 				}
 			}),
 			catchError(() =>
 			{
-				this.loggedIn = false;
+				this.setAuthStatus(false);
 				return of(false);
 			})
 		);
@@ -58,6 +96,8 @@ export class AuthService
 		{
 			localStorage.setItem('jwt', token);
 			localStorage.setItem('jwtExpiration', jwtExpiration.toString());
+
+			this.setAuthStatus(true);
 			return true;
 		}
 		catch (Error)
@@ -65,6 +105,31 @@ export class AuthService
 			console.log(Error);
 			return false;
 		}
+	}
+
+	updateProfile(model: ProfileModel): Observable<ProfileModel | null>
+	{
+		const headers = new HttpHeaders({
+			'Content-Type': 'application/json',
+			'Access-Control-Allow-Origin': '*',
+			'Access-Control-Allow-Methods': '*',
+			'Access-Control-Allow-Headers': '*',
+			'charset': 'utf-8'
+		});
+		return this.http.patch<ProfileModel | null>(environment.apiUrl + '/user/profile/', model, {
+			headers: headers
+		}).pipe(
+			map(result =>
+			{
+				if (result) this.currentUser = result;
+				return result;
+			}),
+			catchError((response) =>
+			{
+				return throwError(() => response.error)
+			}),
+			shareReplay(1)
+		);
 	}
 
 	register(model: RegisterModel): Observable<boolean>
@@ -77,31 +142,26 @@ export class AuthService
 			'charset': 'utf-8'
 		});
 		const baseUrl = environment.apiUrl;
-		console.log('hey i"m called');
+
 		return this.http.post<object>(baseUrl + '/user/register/', model, {
 			headers: headers
 		}).pipe(
 			map((result) =>
 			{
-				console.log(result);
+				if (!result) return false;
+				const loginModel: LoginModel = {
+					Username: model.username,
+					Password: model.password,
+					IsPersistant: false
+				}
+				this.login(loginModel);
 				return true;
-				// if (result.token != null)
-				// {
-				// 	this.loggedIn = true;
-				// 	this.signIn(result.token, result.expire);
-				// 	return true;
-				// }
-				// else
-				// {
-				// 	this.loggedIn = false;
-				// 	return false
-				// }
 			}),
 			catchError((errors) =>
 			{
 				console.log(errors);
 
-				this.loggedIn = false;
+				this.setAuthStatus(false);
 				return of(false);
 			})
 		);
@@ -111,6 +171,7 @@ export class AuthService
 	{
 		localStorage.removeItem('jwt');
 		localStorage.removeItem('jwtExpiration');
+		this.setAuthStatus(false);
 	}
 
 	isAuthenticated(): boolean
@@ -121,8 +182,10 @@ export class AuthService
 
 		if (token && tokenExpiration != null && expire > Math.round(Date.now() / 1000))
 		{
+			this.setAuthStatus(true);
 			return true;
 		}
+		this.setAuthStatus(false);
 		return false;
 	}
 
@@ -132,15 +195,14 @@ export class AuthService
 		return this.http.get<ProfileModel | null>(environment.apiUrl + '/user/profile/').pipe(
 			map(result =>
 			{
-				console.log(result);
-
 				if (result) return result;
 				return null;
 			}),
 			catchError(err =>
 			{
 				return of(null);
-			})
+			}),
+			shareReplay(1)
 		);
 	}
 

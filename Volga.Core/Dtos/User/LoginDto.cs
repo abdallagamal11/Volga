@@ -1,4 +1,4 @@
-﻿namespace Volga.Core.Dtos;
+﻿namespace Volga.Core.Dtos.User;
 
 public class LoginDto
 {

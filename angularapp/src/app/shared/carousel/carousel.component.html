@@ -1,0 +1,17 @@
+<div class="vg-carousel-wrapper" #carouselWrapper>
+	<div class="vg-carousel-main" [ngClass]="{ rtl: rtl }" #carouselMainLine>
+		<ng-content></ng-content>
+	</div>
+	<button
+		class="pager btn-prev"
+		(click)="prevPage()"
+		[disabled]="!loop && index == 0"
+		[ngClass]="{ rtl: rtl }"
+	></button>
+	<button
+		class="pager btn-next"
+		(click)="nextPage()"
+		[disabled]="!loop && index == numPages - 1"
+		[ngClass]="{ rtl: rtl }"
+	></button>
+</div>

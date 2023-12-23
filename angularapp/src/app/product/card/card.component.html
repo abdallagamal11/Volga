@@ -1,0 +1,115 @@
+<div class="card">
+	<div class="product-card-img-top">
+		<!-- card-img-top -->
+		<a [routerLink]="['product', productData?.id]">
+			<img
+				src="{{ productData?.imageUrl }}"
+				class="card-img-top img-fluid"
+				alt="{{ productData?.title?.substring(0, 50) }}"
+			/>
+		</a>
+		<!-- absoluters -->
+		<div
+			class="discount-badge"
+			*ngIf="productData?.stock && productData?.discount"
+		>
+			{{ -productData?.discount! / 100 | percent }}
+		</div>
+		<div class="star-bg"></div>
+	</div>
+
+	<div class="product-card-body">
+		<div class="d-flex justify-content-between">
+			<div
+				class="in-stock-badge"
+				*ngIf="productData?.stock && productData?.stock! > 0"
+			>
+				<i class="bi bi-check-circle"></i>
+				In Stock
+			</div>
+			<div class="me-2 share-btn">
+				<div class="dropdown">
+					<i
+						class="bi bi-share dropdown-toggle"
+						data-bs-toggle="dropdown"
+						aria-expanded="false"
+					></i>
+					<ul class="dropdown-menu">
+						<li>
+							<a
+								class="dropdown-item"
+								[href]="shareLinks['mail']"
+								target="_blank"
+								>Email</a
+							>
+						</li>
+						<li>
+							<a
+								class="dropdown-item"
+								[href]="shareLinks['fb']"
+								target="_blank"
+								>Facebook</a
+							>
+						</li>
+						<li>
+							<a
+								class="dropdown-item"
+								[href]="shareLinks['x']"
+								target="_blank"
+								>X</a
+							>
+						</li>
+						<li>
+							<button
+								class="dropdown-item"
+								(click)="copyToClipboard(shareLinks['copy'])"
+							>
+								Copy link
+							</button>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<p class="product-card-vendor">
+			{{ productData?.vendorName }}
+		</p>
+		<h5 class="card-title">
+			<a [routerLink]="['product', productData?.id]">{{
+				productData?.title
+			}}</a>
+		</h5>
+		<div class="card-text">
+			<p class="product-card-description">
+				{{ productData?.description }}
+			</p>
+		</div>
+		<div class="product-card-price text-center">
+			<span *ngIf="productData?.stock && productData?.priceAfterDiscount">
+				{{ productData?.priceAfterDiscount | currency }}
+				<span class="product-old-price-wrapper">
+					{{ "was" | uppercase }}:
+					<span class="old-price">{{
+						productData?.price | currency
+					}}</span>
+				</span>
+			</span>
+			<span
+				*ngIf="productData?.stock && !productData?.priceAfterDiscount"
+			>
+				{{ productData?.price | currency }}
+			</span>
+		</div>
+	</div>
+	<div class="product-card-footer">
+		<span *ngIf="!productData?.stock">
+			<div class="out-of-stock-badge" *ngIf="!productData?.stock">
+				<i class="bi bi-exclamation-circle"></i>
+				Out of stock
+			</div>
+		</span>
+		<button *ngIf="productData?.stock" class="btn btn-primary vg-btn w-100">
+			Add to cart
+		</button>
+	</div>
+</div>

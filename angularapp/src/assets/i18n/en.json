@@ -1,20 +1,49 @@
 {
+	"account": {
+		"birthdate": "Birth Date",
+		"email": "Email",
+		"enter_password_to_confirm": "Enter your password to confirm",
+		"fieldrequired": "This field is required!",
+		"firstName": "First Name",
+		"gender": "Gender",
+		"invalidGenderSelection": "Invalid Gender Selection",
+		"invalidPassword": "Invalid Password!",
+		"lastName": "Last Name",
+		"password": {
+			"digits": "digits",
+			"lowercase": "lowercase letter",
+			"specialletter": "special character",
+			"uppercase": "uppercase letter"
+		},
+		"password.digits": "Digits",
+		"password.lowercase": "Lowercase",
+		"password.specialletter": "Special Character",
+		"password.uppercase": "Uppercase",
+		"update_your_profile_data": "Update your profile data",
+		"updateProfile": "Update Profile",
+		"username": "Username"
+	},
 	"Birthdate": "Birth Date",
 	"Gender": "Gender",
 	"GenderList": {
 		"Female": "Female",
 		"Male": "Male"
 	},
+	"GenderList.Female": "Female",
+	"GenderList.Male": "Male",
+	"general": {
+		"account": "Account",
+		"all_categories": "All Categories",
+		"hello_x": "Hello, {{ username }}",
+		"language": "Language",
+		"login": "Login",
+		"profile": "Profile",
+		"register": "Register",
+		"search": "Search",
+		"cart": "Cart"
+	},
+	"INVALID_GENDER_SELECTION": "Invalid Gender Selection",
 	"Login": "Login",
 	"Profile": "Profile",
-	"Register": "Register",
-	"account": {
-		"fieldrequired": "This field is required!",
-		"password": {
-			"digits": "digits",
-			"lowercase": "lowercase letter",
-			"specialletter": "special character",
-			"uppercase": "uppercase letter"
-		}
-	}
+	"Register": "Register"
 }

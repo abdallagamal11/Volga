@@ -7,7 +7,7 @@ import { RegisterModel } from 'src/app/core/models/register-model';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { VgFormControls, VgFormGroup } from 'src/app/core/types/vg-form-group';
 import { UserValidators } from 'src/app/core/validators/user-validators';
-import { SettingMap, environment } from 'src/app/environment';
+import { environment } from 'src/app/environment';
 //import { LOCALE_ID, Inject } from '@angular/core';
 
 @Component({

@@ -14,7 +14,7 @@ public class BaseRepository<T> : IRepository<T> where T : class
 	}
 
 	// GET ALL
-	public IEnumerable<T> GetAll()
+	public List<T> GetAll()
 	{
 		return context.Set<T>().ToList();
 	}
@@ -40,7 +40,7 @@ public class BaseRepository<T> : IRepository<T> where T : class
 
 		if (includes != null)
 			foreach (var include in includes)
-				query.Include(include);
+				query = query.Include(include);
 
 		return query.SingleOrDefault(criteria);
 	}
@@ -49,17 +49,20 @@ public class BaseRepository<T> : IRepository<T> where T : class
 	{
 		IQueryable<T> query = context.Set<T>();
 
-		if (includes != null) 
+		if (includes != null)
 			foreach (var include in includes)
-				query.Include(include);
+				query = query.Include(include);
 
 		return await query.SingleOrDefaultAsync(criteria);
 	}
 
 	// FIND ALL BY CRITERIA
-	public IEnumerable<T> FindAll(Expression<Func<T, bool>> criteria)
+	public IEnumerable<T> FindAll(Expression<Func<T, bool>> criteria, string[]? includes = null)
 	{
 		IQueryable<T> query = context.Set<T>();
+		if (includes != null)
+			foreach (var include in includes)
+				query.Include(include);
 		return query.Where(criteria).ToList();
 	}
 
@@ -80,7 +83,7 @@ public class BaseRepository<T> : IRepository<T> where T : class
 	public async Task<T> AddAsync(T entity)
 	{
 		await context.Set<T>().AddAsync(entity);
-		return  entity;
+		return entity;
 	}
 
 	// ADD RANGE
@@ -128,5 +131,10 @@ public class BaseRepository<T> : IRepository<T> where T : class
 	public int Count(Expression<Func<T, bool>> criteria)
 	{
 		return context.Set<T>().Count(criteria);
+	}
+
+	public DbSet<T> GetAllRaw()
+	{
+		return context.Set<T>();
 	}
 }

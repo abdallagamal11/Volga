@@ -7,10 +7,13 @@ using Microsoft.OpenApi.Models;
 using System.Globalization;
 using System.Security.Claims;
 using System.Text;
+using System.Text.Json.Serialization;
 using Volga.Core;
 using Volga.Core.Services;
 using Volga.Infrastructure;
+using Volga.Infrastructure.Interfaces;
 using Volga.Infrastructure.Models;
+using Volga.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -76,7 +79,12 @@ builder.Services
 
 #endregion
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+.AddJsonOptions(options =>
+{
+	options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+	options.JsonSerializerOptions.WriteIndented = true;
+});
 
 #region Swagger
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -115,6 +123,17 @@ builder.Services.AddLocalization(options => options.ResourcesPath = "Resources")
 
 builder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 builder.Services.AddTransient<AuthService>();
+builder.Services.AddSingleton(typeof(IRepository<>), typeof(BaseRepository<>));
+
+//======================================
+
+builder.Services.AddScoped<ProductService, ProductService>();
+builder.Services.AddScoped<CategoryService, CategoryService>();
+builder.Services.AddScoped<IRepository<Product>, ProductRepository>();
+builder.Services.AddScoped<IRepository<Category>, CategoryRepository>();
+
+
+// =====================================
 
 builder.Services.AddCors(options =>
 {

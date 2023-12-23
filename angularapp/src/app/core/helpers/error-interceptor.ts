@@ -8,9 +8,7 @@ import { Observable, catchError, throwError } from "rxjs";
 })
 export class ErrorInterceptor implements HttpInterceptor
 {
-	constructor(private router: Router)
-	{
-	}
+	constructor(private router: Router) { }
 
 	intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>>
 	{
@@ -20,7 +18,7 @@ export class ErrorInterceptor implements HttpInterceptor
 			if (err.status === 404) this.handleNotFound();
 			if (err.status === 401) this.handleUnauthorized();
 			const error = err;
-			return throwError(error);
+			return throwError(() => error);
 		}));
 	}
 
@@ -30,7 +28,7 @@ export class ErrorInterceptor implements HttpInterceptor
 	}
 	handleNotFound(): void
 	{
-		this.router.navigate(['/404'], { queryParams: { returnUrl: this.router.url } });
+		this.router.navigate(['/404'], { queryParams: { returnUrl: this.router.url }, skipLocationChange: true });
 	}
 	handleUnauthorized(): void
 	{

@@ -193,10 +193,12 @@ namespace Volga.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("parentId")
+                    b.Property<int?>("parentId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("parentId");
 
                     b.ToTable("Categories");
                 });
@@ -274,20 +276,28 @@ namespace Volga.Infrastructure.Migrations
 
                     b.Property<string>("ImageUrl")
                         .IsRequired()
-                        .HasMaxLength(511)
-                        .HasColumnType("nvarchar(511)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<double>("Price")
                         .HasColumnType("float");
+
+                    b.Property<int>("Stock")
+                        .HasColumnType("int");
 
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
+                    b.Property<int>("VendorId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
+
+                    b.HasIndex("VendorId");
 
                     b.ToTable("Products");
                 });
@@ -304,6 +314,9 @@ namespace Volga.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
                     b.Property<int>("Rating")
                         .HasColumnType("int");
 
@@ -318,7 +331,36 @@ namespace Volga.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ProductId");
+
                     b.ToTable("UserReviews");
+                });
+
+            modelBuilder.Entity("Volga.Infrastructure.Models.Vendor", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Vendors");
                 });
 
             modelBuilder.Entity("Volga.Infrastructure.Models.VgUser", b =>
@@ -521,6 +563,16 @@ namespace Volga.Infrastructure.Migrations
                     b.Navigation("Product");
                 });
 
+            modelBuilder.Entity("Volga.Infrastructure.Models.Category", b =>
+                {
+                    b.HasOne("Volga.Infrastructure.Models.Category", "ParentCategory")
+                        .WithMany("ChildCategories")
+                        .HasForeignKey("parentId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("ParentCategory");
+                });
+
             modelBuilder.Entity("Volga.Infrastructure.Models.Order", b =>
                 {
                     b.HasOne("Volga.Infrastructure.Models.VgUser", "User")
@@ -559,7 +611,37 @@ namespace Volga.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Volga.Infrastructure.Models.Vendor", "Vendor")
+                        .WithMany("Products")
+                        .HasForeignKey("VendorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Category");
+
+                    b.Navigation("Vendor");
+                });
+
+            modelBuilder.Entity("Volga.Infrastructure.Models.UserReview", b =>
+                {
+                    b.HasOne("Volga.Infrastructure.Models.Product", "Product")
+                        .WithMany("UserReviews")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("Volga.Infrastructure.Models.Vendor", b =>
+                {
+                    b.HasOne("Volga.Infrastructure.Models.VgUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Volga.Infrastructure.Models.Cart", b =>
@@ -569,12 +651,24 @@ namespace Volga.Infrastructure.Migrations
 
             modelBuilder.Entity("Volga.Infrastructure.Models.Category", b =>
                 {
+                    b.Navigation("ChildCategories");
+
                     b.Navigation("Products");
                 });
 
             modelBuilder.Entity("Volga.Infrastructure.Models.Order", b =>
                 {
                     b.Navigation("OrderLines");
+                });
+
+            modelBuilder.Entity("Volga.Infrastructure.Models.Product", b =>
+                {
+                    b.Navigation("UserReviews");
+                });
+
+            modelBuilder.Entity("Volga.Infrastructure.Models.Vendor", b =>
+                {
+                    b.Navigation("Products");
                 });
 #pragma warning restore 612, 618
         }

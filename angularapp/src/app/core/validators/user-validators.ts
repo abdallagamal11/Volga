@@ -1,15 +1,20 @@
 import { AbstractControl, AsyncValidatorFn, ValidationErrors, ValidatorFn } from "@angular/forms";
 import { AuthService } from "../services/auth.service";
-import { Observable, map } from "rxjs";
+import { Observable, map, of } from "rxjs";
 import { environment } from "src/app/environment";
 
 export class UserValidators
 {
-	static emailTaken(authService: AuthService): AsyncValidatorFn
+	static emailTaken(authService: AuthService, defaultEmail: string | null = null): AsyncValidatorFn
 	{
 		return (control: AbstractControl): Observable<ValidationErrors | null> =>
 		{
 			const email = control.value;
+
+			if (defaultEmail != null && control.getRawValue() == defaultEmail)
+			{
+				return of(null);
+			}
 
 			return authService.isEmailTaken(email).pipe(
 				map(result =>

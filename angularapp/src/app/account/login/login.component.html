@@ -1,5 +1,4 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-
 <div
 	class="alert text-center mx-auto w-75"
 	*ngIf="submitted === true && loginSuccess === undefined"
@@ -21,6 +20,9 @@
 <form #loginForm="ngForm" (ngSubmit)="OnSubmit()">
 	<!-- Username -->
 	<div class="form-group login-form-group has-validation">
+		<div class="form-header">
+			{{ "general.login" | translate }}
+		</div>
 		<label for="Username" class="form-label">Username: </label>
 		<input
 			name="Username"

@@ -1,11 +1,28 @@
 /* You can add global styles to this file, and also import other style files */
 @import "./assets/bootstrap.css";
+@import "/node_modules/bootstrap-icons/font/bootstrap-icons.min.css";
 
 .vg-btn
 {
 	-webkit-border-radius: 25px;
 	-moz-border-radius: 25px;
-	border-radius: 25px;
-	padding-left: 1.7rem;
-	padding-right: 1.7rem;
+	border-radius: 25px!important;
+	padding-left: 1.7rem!important;
+	padding-right: 1.7rem!important;
+}
+
+.form-header
+{
+	margin: 1rem 0;
+	font-size: 1.2rem;
+	padding-bottom: .3rem;
+	font-weight: 600;
+	text-transform: uppercase;
+	border-bottom: 1px solid #ccc;
+	user-select: none;
+}
+
+.container
+{
+	max-width: 95%;
 }

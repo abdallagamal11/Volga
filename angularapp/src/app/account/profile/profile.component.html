@@ -1,1 +1,192 @@
-<p>profile works!</p>
+<form novalidate [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+	<div class="form-group profile-form-group">
+		<div class="form-header">
+			{{ "account.update_your_profile_data" | translate }}
+		</div>
+		<label for="firstName">{{ "account.firstName" | translate }}:</label>
+		<input
+			type="text"
+			name="firstName"
+			id="firstName"
+			class="form-control"
+			[ngClass]="{
+				'is-invalid':
+					controls.firstName.touched && controls.firstName.invalid
+			}"
+			placeholder="{{ 'account.firstName' | translate }}"
+			[formControl]="controls.firstName"
+		/>
+		<div
+			class="invalid-feedback"
+			[ngClass]="{
+				'd-block':
+					controls.firstName.touched && controls.firstName.invalid
+			}"
+		>
+			This field is required
+		</div>
+	</div>
+	<div class="form-group profile-form-group">
+		<label for="lastName">{{ "account.lastName" | translate }}:</label>
+		<input
+			type="text"
+			name="lastName"
+			id="lastName"
+			class="form-control"
+			[ngClass]="{
+				'is-invalid':
+					controls.lastName.touched && controls.lastName.invalid
+			}"
+			placeholder="{{ 'account.lastName' | translate }}"
+			[formControl]="controls.lastName"
+		/>
+		<div
+			class="invalid-feedback"
+			[ngClass]="{
+				'd-block':
+					controls.lastName.touched && controls.lastName.invalid
+			}"
+		>
+			This field is required
+		</div>
+	</div>
+
+	<div class="form-group profile-form-group">
+		<label for="username">{{ "account.username" | translate }}:</label>
+		<input
+			type="text"
+			name="username"
+			id="username"
+			placeholder="{{ 'account.username' | translate }}"
+			class="form-control"
+			[formControl]="controls.username"
+		/>
+	</div>
+
+	<div class="form-group profile-form-group">
+		<label for="email">{{ "account.email" | translate }}:</label>
+		<input
+			type="text"
+			name="email"
+			id="email"
+			class="form-control"
+			placeholder="john@doe.com"
+			[formControl]="controls.email"
+			[ngClass]="{
+				'is-invalid': controls.email.touched && controls.email.invalid,
+				'is-valid':
+					controls.email.touched &&
+					this.controls.email.valid &&
+					this.profileModel?.email !== this.controls.email.value
+			}"
+		/>
+		<div
+			class="invalid-feedback d-block"
+			*ngIf="
+				controls.email.invalid &&
+				(controls.email.touched || controls.email.dirty)
+			"
+		>
+			<span *ngIf="controls.email.errors?.['required']">
+				This field is required
+			</span>
+			<span *ngIf="controls.email.errors?.['email']"
+				>Email address should be like john&commat;doe.com</span
+			>
+			<span *ngIf="controls.email.errors?.['emailTaken']"
+				>This email exists before</span
+			>
+		</div>
+		<div
+			class="valid-feedback d-block"
+			*ngIf="
+				controls.email.touched &&
+				this.controls.email.valid &&
+				!this.controls.email.errors &&
+				!this.controls.email.errors?.['emailTaken'] &&
+				this.profileModel?.email !== this.controls.email.value
+			"
+		>
+			Valid Email!
+		</div>
+	</div>
+
+	<div class="form-group profile-form-group">
+		<label for="gender">{{ "account.gender" | translate }}:</label>
+		<select
+			class="form-select"
+			[ngClass]="{
+				'is-invalid': controls.gender.touched && controls.gender.invalid
+			}"
+			[formControl]="controls.gender"
+		>
+			<option value="-1" [selected] disabled>Select one</option>
+			<option *ngFor="let gender of genders" [ngValue]="gender.value">
+				{{ "GenderList." + gender.key | translate }}
+			</option>
+		</select>
+		<div
+			class="invalid-feedback"
+			*ngIf="controls.gender.touched && controls.gender.errors"
+		>
+			<div *ngIf="controls.gender.errors?.['required']">
+				{{ "account.invalidGenderSelection" | translate }}
+			</div>
+		</div>
+	</div>
+
+	<div class="form-group profile-form-group">
+		<label for="birthDate">{{ "account.birthdate" | translate }}:</label>
+		<input
+			type="date"
+			name="birthDate"
+			id="birthDate"
+			class="form-control"
+			[formControl]="controls.birthDate"
+			[ngClass]="{
+				'is-invalid':
+					controls.birthDate.touched && controls.birthDate.invalid
+			}"
+		/>
+	</div>
+
+	<div class="form-group profile-form-group">
+		<label for="Password"
+			>{{ "account.enter_password_to_confirm" | translate }}:</label
+		>
+		<input
+			type="password"
+			class="form-control"
+			id="Password"
+			placeholder="Password"
+			[formControl]="controls.password"
+			[ngClass]="{
+				'is-invalid':
+					controls.password.touched && controls.password.invalid
+			}"
+		/>
+		<div
+			class="invalid-feedback d-block"
+			*ngIf="controls.password.touched && controls.password.invalid"
+		>
+			<div *ngIf="controls.password.errors?.['required']">
+				{{ "account.fieldrequired" | translate }}
+			</div>
+			<div *ngIf="controls.password.hasError('invalidPassword')">
+				{{ "account.invalidPassword" | translate }}
+			</div>
+		</div>
+	</div>
+
+	<!-- Submit Button -->
+	<div class="profile-form-buttons">
+		<button
+			type="submit"
+			class="btn btn-primary vg-btn"
+			loginForm="ngForm"
+			[disabled]="profileForm.invalid"
+		>
+			{{ "account.updateProfile" | translate | uppercase }}
+		</button>
+	</div>
+</form>

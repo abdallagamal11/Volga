@@ -20,4 +20,8 @@ public class UserReview
 	[Timestamp]
 	public byte[] Timestamp { get; set; }
 
+	[Required, ForeignKey("Product")]
+	public int ProductId { get; set; }
+
+	public virtual Product Product { get; set; }
 }

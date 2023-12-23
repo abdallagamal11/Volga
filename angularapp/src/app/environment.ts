@@ -1,3 +1,5 @@
+import { languageItem } from './core/types/language'
+
 export const environment = {
 	apiUrl: 'https://localhost:7067/api',
 	passwordRequirements: {
@@ -6,6 +8,14 @@ export const environment = {
 		useSpecialLetter: true,
 		useDigits: true,
 		minLength: 8,
+	},
+	culture: {
+		languageList: [
+			{ key: 'en', value: 'English', rtl: false },
+			{ key: 'ar', value: 'Arabic', rtl: true }
+		],
+		currentLanguage: { key: 'en', value: 'English', rtl: false },
+
 	}
 };
 

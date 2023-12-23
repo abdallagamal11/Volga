@@ -14,7 +14,7 @@ public class Product
 	[Required, MaxLength(255)]
 	public string Title { get; set; } = string.Empty;
 
-	[Required, MaxLength(511)]
+	[Required, MaxLength(255)]
 	public string ImageUrl { get; set; } = string.Empty;
 
 	[Required]
@@ -26,5 +26,16 @@ public class Product
 	public double Discount { get; set; } = 0;
 
 	[Required]
+	public int Stock { get; set; } = 0;
+
+	[Required]
 	public virtual Category Category { get; set; }
+
+	public virtual HashSet<UserReview> UserReviews { get; set; } = new HashSet<UserReview>();
+
+	[Required, ForeignKey(nameof(Vendor))]
+	public int VendorId { get; set; }
+
+	[ForeignKey("VendorId")]
+	public virtual Vendor Vendor { get; set; }
 }

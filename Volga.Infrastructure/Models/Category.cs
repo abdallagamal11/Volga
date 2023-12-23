@@ -8,7 +8,8 @@ public class Category
 	[Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 	public int Id { get; set; }
 
-	public int parentId { get; set; } = 0;
+	[ForeignKey(nameof(Category))]
+	public int? parentId { get; set; } = 0;
 
 	[Required]
 	public string Name { get; set; } = string.Empty;
@@ -16,4 +17,9 @@ public class Category
 	public string Description { get; set; } = string.Empty;
 
 	public virtual ICollection<Product>? Products { get; set; }
+
+	public virtual Category? ParentCategory { get; set; }
+
+	//	[InverseProperty("ParentCategory")]
+	public virtual ICollection<Category>? ChildCategories { get; set; }
 }

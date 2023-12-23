@@ -1,0 +1,41 @@
+<h3 class="title">Recommended Products</h3>
+<div class="vgcarousel">
+	<div class="carousel-wrapper" *ngIf="carouselItems">
+		<!-- <swiper-container
+			*ngIf="featuredProducts"
+			[navigation]="true"
+			[slides-per-view]="3"
+			[slides-per-group]="3"
+			[speed]="500"
+			[loop]="false"
+			[breakpoints]="breakpoints"
+			[cssMode]="false"
+			direction="horizontal"
+			init="true"
+		>
+			<swiper-slide
+				class="swiper-slide"
+				*ngFor="let product of featuredProducts"
+			>
+				<div class="card-wrapper" *ngFor="let product of featuredProducts">
+					<app-card
+						class="product-card"
+						[productData]="product"
+					></app-card>
+				</div>
+			</swiper-slide>
+		</swiper-container> -->
+		<vg-carousel [items]="carouselItems" [rtl]="currentLang.rtl">
+			<div
+				class="card-wrapper"
+				*ngFor="let product of featuredProducts"
+				#carouselItems
+			>
+				<app-card
+					class="product-card"
+					[productData]="product"
+				></app-card>
+			</div>
+		</vg-carousel>
+	</div>
+</div>

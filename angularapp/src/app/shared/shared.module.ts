@@ -5,6 +5,8 @@ import { FooterComponent } from './footer/footer.component';
 import { ForbiddenComponent } from './forbidden/forbidden.component';
 import { ErrorNotFoundComponent } from './error-not-found/error-not-found.component';
 import { AppRoutingModule } from '../app-routing.module';
+import { TranslateModule } from '@ngx-translate/core';
+import { CarouselComponent } from './carousel/carousel.component';
 
 @NgModule({
 	declarations: [
@@ -15,7 +17,8 @@ import { AppRoutingModule } from '../app-routing.module';
 	],
 	imports: [
 		CommonModule,
-		AppRoutingModule
+		AppRoutingModule,
+		TranslateModule
 	],
 	exports: [
 		ForbiddenComponent,

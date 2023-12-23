@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { languageItem } from './core/types/language';
+import { environment } from './environment';
+import { CultureService } from './core/services/culture.service';
 
 @Component({
 	selector: 'app-root',
@@ -9,14 +12,13 @@ import { TranslateService } from '@ngx-translate/core';
 export class AppComponent
 {
 	title = 'angularapp';
-	constructor(private translate: TranslateService)
+	language: languageItem | undefined;
+	constructor(private cultureService: CultureService)
 	{
-		translate.setDefaultLang('en');
-		translate.use('en');
 	}
 
 	useLanguage(language: string): void
 	{
-		this.translate.use(language);
+		this.cultureService.useLanguage(language);
 	}
 }

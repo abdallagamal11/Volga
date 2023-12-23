@@ -5,7 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Volga.Core.Dtos;
+using Volga.Core.Dtos.User;
 using Volga.Core.Utilities;
 using Volga.Infrastructure.Models;
 
@@ -112,7 +112,7 @@ public class AuthService
 			{
 				new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
 				new Claim(ClaimTypes.Email, user.Email!),
-				new Claim(ClaimTypes.Role, String.Join(',', roles))
+				new Claim(ClaimTypes.Role, string.Join(',', roles))
 			};
 		}
 
@@ -139,7 +139,7 @@ public class AuthService
 		if (userClaims == null) return null;
 
 		var algorithm = SecurityAlgorithms.HmacSha256Signature;
-		var secretKeyRaw = _config.GetValue<String>("Jwt:SecretKey")!;
+		var secretKeyRaw = _config.GetValue<string>("Jwt:SecretKey")!;
 
 		var secretKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secretKeyRaw));
 		var signingCredentials = new SigningCredentials(secretKey, algorithm);
@@ -148,8 +148,8 @@ public class AuthService
 			claims: userClaims,
 			signingCredentials: signingCredentials,
 			expires: expiration,
-			issuer: _config.GetValue<String>("Jwt:Issuer"),
-			audience: _config.GetValue<String>("Jwt:Audience")
+			issuer: _config.GetValue<string>("Jwt:Issuer"),
+			audience: _config.GetValue<string>("Jwt:Audience")
 		);
 
 		string token = new JwtSecurityTokenHandler().WriteToken(jwtToken);
@@ -187,5 +187,79 @@ public class AuthService
 			PhoneNumber = user.PhoneNumber,
 			Address = user.Address
 		};
+	}
+
+	public async Task<ProfileDto?> UpdateCurrentUserProfileAsync(ProfileDto profileData)
+	{
+		VgUser? user = await GetCurrentUserAsync();
+		if (user == null) return null;
+		if (profileData.Password == null)
+		{
+			_actionContextAccessor.ActionContext!.ModelState.AddModelError("Password", "requiredField");
+			return null;
+		}
+		else
+		{
+			if (!await _userManager.CheckPasswordAsync(user, profileData.Password))
+			{
+				_actionContextAccessor.ActionContext!.ModelState.AddModelError("Password", "invalidPassword");
+				return null;
+			}
+		}
+
+		bool userDataChanged = false;
+		if (!string.IsNullOrWhiteSpace(profileData.FirstName) && user.FirstName != profileData.FirstName)
+		{
+			user.FirstName = profileData.FirstName;
+			userDataChanged = true;
+		}
+		if (!string.IsNullOrWhiteSpace(profileData.LastName) && user.LastName != profileData.LastName)
+		{
+			user.LastName = profileData.LastName;
+			userDataChanged = true;
+		}
+		if (!string.IsNullOrWhiteSpace(profileData.Email) && user.Email != profileData.Email)
+		{
+			user.Email = profileData.Email;
+			userDataChanged = true;
+		}
+		if (user.Gender != profileData.Gender)
+		{
+			user.Gender = profileData.Gender;
+			userDataChanged = true;
+		}
+		if (user.BirthDate != profileData.BirthDate)
+		{
+			user.BirthDate = profileData.BirthDate;
+			userDataChanged = true;
+		}
+		if (!string.IsNullOrWhiteSpace(profileData.PhoneNumber) && user.PhoneNumber != profileData.PhoneNumber)
+		{
+			user.PhoneNumber = profileData.PhoneNumber;
+			userDataChanged = true;
+		}
+		if (!string.IsNullOrWhiteSpace(profileData.Address) && user.Address != profileData.Address)
+		{
+			user.Address = profileData.Address;
+			userDataChanged = true;
+		}
+
+		if (userDataChanged)
+		{
+			IdentityResult success = await _userManager.UpdateAsync(user);
+			if (success == IdentityResult.Success)
+			{
+				return profileData;
+			}
+			else
+			{
+				foreach (IdentityError error in success.Errors)
+				{
+					_actionContextAccessor.ActionContext!.ModelState.AddModelError(error.Code.ToString(), error.Description);
+				}
+			}
+		}
+
+		return null;
 	}
 }

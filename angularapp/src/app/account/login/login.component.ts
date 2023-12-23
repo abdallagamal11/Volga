@@ -26,8 +26,8 @@ export class LoginComponent
 
 	constructor(private authService: AuthService, router: Router)
 	{
-		if (authService.isAuthenticated())
-			router.navigate(['/account', 'alreadyloggedin']);
+		//if (authService.isAuthenticated())
+		//	router.navigate(['/account', 'alreadyloggedin']);
 	}
 
 	async OnSubmit()
