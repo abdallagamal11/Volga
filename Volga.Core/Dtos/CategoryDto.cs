@@ -11,4 +11,5 @@ public class CategoryDto
 	public virtual ICollection<Product>? Products { get; set; }
 	public virtual CategoryDto? ParentCategory { get; set; }
 	public virtual ICollection<CategoryDto>? ChildCategories { get; set; }
+	public string ImgUrl { get; set; } = string.Empty;
 }

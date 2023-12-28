@@ -20,5 +20,6 @@ public class ProductDto
 	public string VendorName { get; set; }
 	public int ratingCount { get; set; } = 0;
 	public int ratingSum { get; set; } = 0;
-	public float rating { get; set; } = 0;
+	public int Views { get; set; } = 0;
+	public int Sales { get; set; } = 0;
 }

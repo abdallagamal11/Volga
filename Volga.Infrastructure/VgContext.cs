@@ -14,9 +14,14 @@ public class VgContext : IdentityDbContext<VgUser, VgUserRole, int>
 	public DbSet<Cart> Carts { get; set; }
 	public DbSet<CartItem> CartItems { get; set; }
 	public DbSet<Vendor> Vendors { get; set; }
+	public DbSet<ProductUserInteraction> ProductUserInteractions { get; set; }
 
 	//public VgContext(DbContextOptions options) : base(options) { }
 	public VgContext(DbContextOptions<VgContext> options) : base(options) { }
+
+	public VgContext()
+	{
+	}
 
 	//protected override void OnConfiguring(DbContextOptionsBuilder builder)
 	//{
@@ -43,6 +48,8 @@ public class VgContext : IdentityDbContext<VgUser, VgUserRole, int>
 		.WithMany(v => v.Products)
 		.HasForeignKey(p => p.VendorId)
 		.OnDelete(DeleteBehavior.Restrict);
+
+		builder.Entity<ProductUserInteraction>().HasKey(pui => new { pui.ProductId, pui.UserId });
 
 		base.OnModelCreating(builder);
 

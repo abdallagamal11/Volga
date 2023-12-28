@@ -1,0 +1,48 @@
+.product-card-description
+{
+	text-overflow: ellipsis;
+	-webkit-line-clamp: 3;
+	line-clamp: 3;
+	overflow: hidden;
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	white-space: nowrap;
+	overflow: hidden;
+	overflow-wrap: break-word;
+}
+
+section
+{
+	width: 80%;
+	margin: 0 auto;
+}
+
+section:not(:last-child)
+{
+	margin-bottom: 2em;
+}
+
+.wrapper
+{
+	border-radius: 10px;
+	overflow: hidden;
+}
+
+.category-img-container img
+{
+	object-fit: cover;
+	width: 100%;
+	height: auto;
+	max-height: 150px;
+}
+
+.category-title-container a:link
+{
+	display: block;
+	text-decoration: none;
+}
+
+.category-title-container a:hover
+{
+	text-decoration: underline;
+}

@@ -21,6 +21,7 @@ public class CategoryService
 			parentId = c.parentId,
 			Name = c.Name,
 			Description = c.Description,
+			ImgUrl = c.ImgUrl,
 		}).AsNoTracking().ToList();
 	}
 
@@ -33,6 +34,7 @@ public class CategoryService
 			Id = c.Id,
 			Name = c.Name,
 			Description = c.Description,
+			ImgUrl = c.ImgUrl,
 		}).AsNoTracking().ToList();
 	}
 
@@ -45,6 +47,7 @@ public class CategoryService
 			Id = c.Id,
 			Name = c.Name,
 			Description = c.Description,
+			ImgUrl = c.ImgUrl,
 		}).AsNoTracking().ToList();
 	}
 
@@ -59,6 +62,7 @@ public class CategoryService
 			parentId = category.parentId,
 			Name = category.Name,
 			Description = category.Description,
+			ImgUrl = category.ImgUrl,
 		};
 	}
 }

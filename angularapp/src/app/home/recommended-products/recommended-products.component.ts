@@ -15,11 +15,29 @@ import { register } from 'swiper/element/bundle';
 export class RecommendedProductsComponent implements OnInit
 {
 	currentLang = this.cultureService.currentLanguage;
-	@ViewChildren('carouselItems') carouselItems: ElementRef[] | undefined;
+	@ViewChildren('carouselItems') carouselItems: ElementRef[] = [];
+	responsiveOptions: {} = {
+		0: {
+			numVisible: 1,
+			numScroll: 1
+		},
+		500: {
+			numVisible: 2,
+			numScroll: 2
+		},
+		600: {
+			numVisible: 3,
+			numScroll: 3
+		},
+		800: {
+			numVisible: 4,
+			numScroll: 4
+		},
+	};
 
 	ngOnInit()
 	{
-		this.cdr.detectChanges();
+		// 
 	}
 
 	public featuredProducts: ProductModel[] | null = null;

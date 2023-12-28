@@ -32,4 +32,12 @@ public class CategoryController : BaseAPIController
 	{
 		return Ok(_categoryService.GetParentCategories());
 	}
+
+	[HttpGet("childrenAll")]
+	public IActionResult GetAllChildren(int? id)
+	{
+		if (id == null) return BadRequest();
+		return Ok(_categoryService.GetChildCategories((int)id));
+	}
+
 }

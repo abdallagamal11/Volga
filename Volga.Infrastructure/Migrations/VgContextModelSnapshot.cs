@@ -189,6 +189,10 @@ namespace Volga.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ImgUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -279,11 +283,24 @@ namespace Volga.Infrastructure.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
+                    b.Property<string>("Imgs")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<double>("Price")
                         .HasColumnType("float");
 
+                    b.Property<int>("Sales")
+                        .HasColumnType("int");
+
                     b.Property<int>("Stock")
                         .HasColumnType("int");
+
+                    b.Property<byte[]>("TimestampFirstAdded")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -293,6 +310,15 @@ namespace Volga.Infrastructure.Migrations
                     b.Property<int>("VendorId")
                         .HasColumnType("int");
 
+                    b.Property<int>("Views")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ratingCount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ratingSum")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
@@ -300,6 +326,27 @@ namespace Volga.Infrastructure.Migrations
                     b.HasIndex("VendorId");
 
                     b.ToTable("Products");
+                });
+
+            modelBuilder.Entity("Volga.Infrastructure.Models.ProductUserInteraction", b =>
+                {
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Sales")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Views")
+                        .HasColumnType("int");
+
+                    b.HasKey("ProductId", "UserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ProductUserInteractions");
                 });
 
             modelBuilder.Entity("Volga.Infrastructure.Models.UserReview", b =>
@@ -622,6 +669,25 @@ namespace Volga.Infrastructure.Migrations
                     b.Navigation("Vendor");
                 });
 
+            modelBuilder.Entity("Volga.Infrastructure.Models.ProductUserInteraction", b =>
+                {
+                    b.HasOne("Volga.Infrastructure.Models.Product", "Product")
+                        .WithMany("ProductUserInteractions")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Volga.Infrastructure.Models.VgUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Volga.Infrastructure.Models.UserReview", b =>
                 {
                     b.HasOne("Volga.Infrastructure.Models.Product", "Product")
@@ -663,6 +729,8 @@ namespace Volga.Infrastructure.Migrations
 
             modelBuilder.Entity("Volga.Infrastructure.Models.Product", b =>
                 {
+                    b.Navigation("ProductUserInteractions");
+
                     b.Navigation("UserReviews");
                 });
 

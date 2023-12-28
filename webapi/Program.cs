@@ -129,7 +129,7 @@ builder.Services.AddSingleton(typeof(IRepository<>), typeof(BaseRepository<>));
 
 builder.Services.AddScoped<ProductService, ProductService>();
 builder.Services.AddScoped<CategoryService, CategoryService>();
-builder.Services.AddScoped<IRepository<Product>, ProductRepository>();
+builder.Services.AddScoped<ProductRepository, ProductRepository>();
 builder.Services.AddScoped<IRepository<Category>, CategoryRepository>();
 
 

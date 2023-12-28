@@ -15,7 +15,9 @@ export const environment = {
 			{ key: 'ar', value: 'Arabic', rtl: true }
 		],
 		currentLanguage: { key: 'en', value: 'English', rtl: false },
-
+	},
+	productList: {
+		productsPerPage: 10,
 	}
 };
 

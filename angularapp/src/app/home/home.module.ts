@@ -5,6 +5,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { ProductModule } from '../product/product.module';
 import { RecommendedProductsComponent } from './recommended-products/recommended-products.component';
 import { CarouselModule } from '../shared/carousel/carousel.module';
+import { SharedModule } from '../shared/shared.module';
 
 const routes: Routes = [
 	{ path: '', component: IndexComponent }
@@ -19,7 +20,8 @@ const routes: Routes = [
 		RouterModule.forChild(routes),
 		CommonModule,
 		ProductModule,
-		CarouselModule
+		CarouselModule,
+		SharedModule
 	]
 })
 export class HomeModule { }

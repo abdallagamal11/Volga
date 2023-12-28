@@ -1,5 +1,6 @@
 {
 	"account": {
+		"register": "Register new account",
 		"birthdate": "Birth Date",
 		"email": "Email",
 		"enter_password_to_confirm": "Enter your password to confirm",

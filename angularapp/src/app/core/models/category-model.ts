@@ -7,4 +7,5 @@ export interface CategoryModel
 	//	products: Product[] | null;
 	parentCategory: CategoryModel | null;
 	childCategories: CategoryModel[] | null;
+	imgUrl: string;
 }

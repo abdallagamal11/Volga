@@ -9,21 +9,11 @@ import { environment } from 'src/app/environment';
 })
 export class ProductService
 {
-	constructor(private http: HttpClient)
-	{
-
-	}
+	constructor(private http: HttpClient) { }
 
 	getFeaturedProducts(): Observable<ProductModel[] | null>
 	{
-		const headers = new HttpHeaders({
-			'Content-Type': 'application/json',
-			'Access-Control-Allow-Origin': '*',
-			'Access-Control-Allow-Methods': '*',
-			'Access-Control-Allow-Headers': '*',
-			'charset': 'utf-8'
-		});
-		return this.http.get<ProductModel[] | null>(environment.apiUrl + '/product/recommended', { headers: headers }).pipe(
+		return this.http.get<ProductModel[] | null>(environment.apiUrl + '/product/recommended').pipe(
 			map(result =>
 			{
 				if (result != null)
@@ -34,10 +24,39 @@ export class ProductService
 						{
 							item.priceAfterDiscount = item.price * (1 - item.discount / 100);
 						}
+						item.rating = this.calcRating(item.ratingCount, item.ratingSum);
+						item.ratingStars = this.roundRatingForStars(item.rating);
 					});
+				console.log(result);
+
 				return result;
 			}),
 			catchError(error => throwError(() => error))
 		);
+	}
+
+	calcRating(ratingCount: number, ratingSum: number): number
+	{
+		if (ratingSum == 0 || ratingCount == 0) return 0;
+		return parseFloat((ratingSum / ratingCount).toFixed(2));
+	}
+
+	roundRatingForStars(rating: number): number
+	{
+		if (isNaN(rating)) new Error('Wrong rating input!');
+		if (Number.isInteger(rating)) return rating;
+
+		rating = parseFloat(rating.toFixed(1));
+		const integerPart: number = Math.floor(rating);
+		const decimalPart: number = rating - integerPart;
+
+		if ([0.1, 0.2].includes(decimalPart)) return integerPart;
+		if ([0.8, 0.9].includes(decimalPart)) return Math.ceil(rating);
+		return rating;
+	}
+
+	getPagedProductsByCategory()
+	{
+
 	}
 }

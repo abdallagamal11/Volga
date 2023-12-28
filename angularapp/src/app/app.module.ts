@@ -4,7 +4,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { ErrorInterceptor } from './core/helpers/error-interceptor';
-import { SharedModule } from './shared/shared.module';
 import { CoreModule } from './core/core.module';
 import { TranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -14,6 +13,8 @@ import { LowerCaseUrlSerializerProvider } from './core/helpers/lowercase-url-ser
 import { AuthService } from './core/services/auth.service';
 import { CultureService } from './core/services/culture.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { HttpCoreInterceptor } from './core/helpers/http-core-interceptor';
+import { LayoutModule } from './layout/layout.module';
 
 @NgModule({
 	declarations: [
@@ -23,7 +24,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 		BrowserModule,
 		BrowserAnimationsModule,
 		AppRoutingModule,
-		SharedModule,
+		LayoutModule,
 		CoreModule,
 		HttpClientModule,
 		TranslateModule.forRoot({
@@ -38,6 +39,11 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 	providers: [
 		[
 			LowerCaseUrlSerializerProvider,
+			{
+				provide: HTTP_INTERCEPTORS,
+				useClass: HttpCoreInterceptor,
+				multi: true
+			},
 			{
 				provide: HTTP_INTERCEPTORS,
 				useClass: ErrorInterceptor,

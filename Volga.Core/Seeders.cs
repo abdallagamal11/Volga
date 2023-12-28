@@ -1,4 +1,5 @@
 ﻿using Bogus;
+using Microsoft.EntityFrameworkCore;
 using Volga.Infrastructure;
 using Volga.Infrastructure.Models;
 
@@ -139,5 +140,103 @@ public class CategorySeeder
 		}
 
 		_context.SaveChanges();
+	}
+}
+
+
+// ===================================================================
+// USER REVIEWS SEEDER
+// ===================================================================
+public class UserReviewSeeder
+{
+	private readonly VgContext _context;
+	private readonly Faker<UserReview> _faker;
+
+	public UserReviewSeeder(VgContext context)
+	{
+		_context = context;
+
+		int[] randomUserIds = _context.Users.Select(x => x.Id).ToArray();
+		int[] randomProductIds = _context.Products.Select(x => x.Id).ToArray();
+
+		_faker = new Faker<UserReview>()
+			.RuleFor(r => r.UserId, f => f.PickRandom(randomUserIds))
+			.RuleFor(r => r.Comment, f => f.Lorem.Paragraph())
+			.RuleFor(r => r.Rating, f => f.Random.Int(1, 5))
+			.RuleFor(r => r.ProductId, f => f.PickRandom(randomProductIds));
+	}
+
+	public void Seed(int count)
+	{
+		var reviews = _faker.Generate(count);
+
+		foreach (var review in reviews)
+		{
+			// Optionally, you can set other properties or perform additional logic before adding to the context
+			// e.g., review.SomeProperty = someValue;
+
+			_context.UserReviews.Add(review);
+		}
+
+		_context.SaveChanges();
+	}
+}
+
+/*PRODUCT */
+
+public static class DatabaseSeeder
+{
+
+	public static void SeedProducts(VgContext dbContext)
+	{
+		if (!dbContext.Set<Product>().Any())
+		{
+			var productFaker = new Faker<Product>()
+				.RuleFor(p => p.CategoryId, (f, p) => dbContext.Categories.OrderBy(v => Guid.NewGuid()).Select(v => v.Id).FirstOrDefault())
+				.RuleFor(p => p.Title, f => f.Commerce.ProductName())
+				.RuleFor(p => p.ImageUrl, f => f.Image.PicsumUrl())
+				.RuleFor(p => p.Description, f => f.Lorem.Paragraph())
+				.RuleFor(p => p.Price, f => f.Random.Double(10, 10000))
+				.RuleFor(p => p.Discount, f => f.Random.Double(0, 20))
+				.RuleFor(p => p.Stock, f => f.Random.Number(10, 100))
+				.RuleFor(p => p.VendorId, (f, p) => dbContext.Vendors.OrderBy(v => Guid.NewGuid()).Select(v => v.Id).FirstOrDefault());
+
+			var products = productFaker.Generate(10); // Generate 10 fake products
+
+			dbContext.Set<Product>().AddRange(products);
+			dbContext.SaveChanges();
+		}
+	}
+	public static void SeedProductUserInteractions(VgContext dbContext)
+	{
+		var productUserInteractionFaker = new Faker<ProductUserInteraction>()
+			.RuleFor(pui => pui.ProductId, (f, pui) => f.Random.Number(0, 10)) // Assuming you have 10 products
+			.RuleFor(pui => pui.Views, f => f.Random.Number(0, 20))
+			.RuleFor(pui => pui.Sales, f => f.Random.Number(0, 5))
+			.RuleFor(pui => pui.UserId, f => null); // Assuming you have 5 users
+
+		var usedKeys = new HashSet<(int, int)>(); // Track used keys
+
+
+		var productUserInteractions = productUserInteractionFaker.Generate(100); // Generate 20 interactions
+
+		foreach (var userInteraction in productUserInteractions)
+		{
+			var newKey = (productId: 0, userId: 0);
+
+			do
+			{
+				newKey.productId = dbContext.Products.AsNoTracking().OrderBy(v => Guid.NewGuid()).Select(v => v.Id).FirstOrDefault();
+				newKey.userId = dbContext.Users.AsNoTracking().OrderBy(v => Guid.NewGuid()).Select(v => v.Id).FirstOrDefault();
+			} while (!usedKeys.Add(newKey));
+
+			userInteraction.UserId = newKey.userId;
+			userInteraction.ProductId = newKey.productId;
+
+			dbContext.ProductUserInteractions.Add(userInteraction);
+		}
+
+		dbContext.SaveChanges();
+
 	}
 }

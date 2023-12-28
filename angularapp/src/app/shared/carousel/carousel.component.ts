@@ -1,4 +1,4 @@
-import { AfterViewChecked, AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, HostListener, Input, OnDestroy, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterContentChecked, AfterContentInit, AfterViewChecked, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostListener, Input, OnDestroy, ViewChild, ViewEncapsulation } from '@angular/core';
 
 @Component({
 	selector: 'vg-carousel',
@@ -9,68 +9,91 @@ import { AfterViewChecked, AfterViewInit, ChangeDetectionStrategy, Component, El
 })
 export class CarouselComponent implements AfterViewInit, AfterViewChecked, OnDestroy
 {
-	@Input('items') carouselItems: ElementRef[] | undefined;
-	numVisible = 3;
-	numScroll = 3;
+	@Input() set items(value: ElementRef[] | undefined)
+	{
+		if (value === undefined) return;
+		this.carouselItems = value;
+		this.cdr.detectChanges();
+	}
+
+	carouselItems: ElementRef[] | undefined;
+	@Input() numVisible = 3;
+	@Input() numScroll = 3;
 	@ViewChild('carouselWrapper') carouselWrapper!: ElementRef;
 	@ViewChild('carouselMainLine') carouselMainLine!: ElementRef;
-	tranlateXValue: number = 0;
+	private tranlateXValue: number = 0;
 	private itemWidth = 0;
-	index: number = 0;
-	numPages: number = 0;
+	protected index: number = 0;
+	protected numPages: number = 0;
 	loop: boolean = true;
-	loaded: boolean = false;
-	gap: number = 10;
-	imagesLoaded: number = 0;
-	responsiveOptions: { [k: number]: { [k: string]: number } } | undefined;
-	images: HTMLImageElement[] | undefined;
+	protected loaded: boolean = false;
+	@Input() gap: number = 10;
+	@Input() responsiveOptions: { [k: number]: { [k: string]: number } } | undefined;
 	@Input() rtl: boolean = false;
 
-	constructor(private el: ElementRef)
+	constructor(private el: ElementRef, private cdr: ChangeDetectorRef)
 	{
-		this.responsiveOptions = {
-			400: {
-				numVisible: 1,
-				numScroll: 1
-			},
-			500: {
-				numVisible: 2,
-				numScroll: 2
-			},
-			600: {
-				numVisible: 3,
-				numScroll: 3
-			},
-			800: {
-				numVisible: 4,
-				numScroll: 4
-			},
-		}
-		window.addEventListener('load', e => this.onLoad(e));
+		this.cdr.detach();
+
+		window.addEventListener('load', (e) => this.onLoad(e));
 	}
 
 	onLoad(e: Event)
 	{
 		e.stopPropagation();
-
-		this.images = this.el.nativeElement.querySelectorAll('img');
-		this.images?.forEach(e => e.addEventListener('load', this.handleImageLoad));
-
 		this.updateResponsive();
 		this.updateUi();
-		this.calculatePosition();
+		this.calculatePosition(false);
+		this.cdr.detectChanges();
 	}
+
+
 
 	ngAfterViewInit()
 	{
 		this.updateUi();
-		this.calculatePosition();
+		this.calculatePosition(false);
+		this.cdr.detectChanges();
 	}
 
 	ngAfterViewChecked()
 	{
 		this.updateUi();
-		this.calculatePosition();
+		this.calculatePosition(false);
+		this.cdr.detectChanges();
+		setTimeout(() =>
+		{
+			this.adjustSize();
+		}, 250);
+	}
+
+	adjustSize()
+	{
+		const container = this.carouselWrapper.nativeElement;
+		const containerRect = container.getBoundingClientRect();
+		const items = this.carouselItems;
+
+		items?.forEach((e: any) =>
+		{
+			const item = e.nativeElement;
+			const itemRect = item.getBoundingClientRect();
+
+			// Check if the item is fully or partially visible
+			if (
+				itemRect.top >= containerRect.top &&
+				itemRect.bottom <= containerRect.bottom &&
+				itemRect.left >= containerRect.left &&
+				itemRect.right <= containerRect.right
+			)
+			{
+				// console.log(`Item ${item.innerText} is currently visible`);
+				// Add your logic for visible items here
+				if (containerRect.height < itemRect.height)
+				{
+					container.style.height = itemRect.height + 'px';
+				}
+			}
+		});
 	}
 
 	updateUi(checkLoad: boolean = true)
@@ -92,17 +115,6 @@ export class CarouselComponent implements AfterViewInit, AfterViewChecked, OnDes
 
 		this.loaded = true;
 		this.calculatePosition();
-	}
-
-	handleImageLoad(elm: Event)
-	{
-		this.imagesLoaded++;
-		elm.target?.removeEventListener('load', this.handleImageLoad)
-		if (this.imagesLoaded == this.images?.length)
-		{
-			this.calculatePosition();
-			this.images = undefined;
-		}
 	}
 
 	calculatePosition(checkLoad: boolean = true)
@@ -142,7 +154,8 @@ export class CarouselComponent implements AfterViewInit, AfterViewChecked, OnDes
 	@HostListener('window:resize', ['$event']) onResize(event: Event)
 	{
 		clearTimeout(this.resizeAction);
-		this.resizeAction = setTimeout(() => this.updateResize(), 200);
+		const self = this;
+		this.resizeAction = setTimeout(() => { self.updateResize(); }, 200);
 
 	}
 
@@ -151,6 +164,7 @@ export class CarouselComponent implements AfterViewInit, AfterViewChecked, OnDes
 		if (this.responsiveOptions)
 		{
 			const carouselWidth = this.carouselWrapper.nativeElement.getBoundingClientRect().width;
+
 			Object.entries(this.responsiveOptions)
 				.sort((a, b) => parseInt(a[0]) - parseInt(b[0]))
 				.forEach((obj) =>
@@ -161,21 +175,23 @@ export class CarouselComponent implements AfterViewInit, AfterViewChecked, OnDes
 						if (obj[1]['numVisible']) this.numVisible = obj[1]['numVisible'];
 						if (obj[1]['numScroll']) this.numScroll = obj[1]['numScroll'];
 					}
-				})
+				});
 		}
 	}
 
 	updateResize()
 	{
+		if (this.index > this.numPages - 1) this.index = 0;
 		this.updateResponsive();
-		if (this.index > this.numPages - 1) this.index = this.numPages;
 		this.updateUi(false);
 		this.calculatePosition(false);
+		if (this.index > this.numPages - 1) this.index = 0;
+
 		this.tranlateXValue = -1 * this.itemWidth * this.numScroll * this.index;
+
 		if (this.rtl)
 		//	this.tranlateXValue = (-this.itemWidth * this.carouselItems!.length) + this.itemWidth * this.numScroll * (this.index + 1);
 		{
-
 			if (this.index + 1 > this.numPages - 1)
 			{
 				// If we are at the last page, transition back to the first page
@@ -191,6 +207,7 @@ export class CarouselComponent implements AfterViewInit, AfterViewChecked, OnDes
 		}
 
 		this.carouselMainLine.nativeElement.style.transform = `translate3d(${this.tranlateXValue}px, 0, 0)`;
+		this.cdr.detectChanges();
 	}
 
 	nextPage(): void
@@ -223,6 +240,6 @@ export class CarouselComponent implements AfterViewInit, AfterViewChecked, OnDes
 	{
 		clearTimeout(this.resizeAction);
 		const images: HTMLImageElement[] = this.el.nativeElement.querySelectorAll('img');
-		images.forEach((e) => e.removeEventListener('load', this.handleImageLoad));
+
 	}
 }

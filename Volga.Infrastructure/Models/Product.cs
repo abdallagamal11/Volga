@@ -17,6 +17,8 @@ public class Product
 	[Required, MaxLength(255)]
 	public string ImageUrl { get; set; } = string.Empty;
 
+	public string Imgs { get; set; } = string.Empty;
+
 	[Required]
 	public string Description { get; set; } = string.Empty;
 
@@ -38,4 +40,12 @@ public class Product
 
 	[ForeignKey("VendorId")]
 	public virtual Vendor Vendor { get; set; }
+	public virtual HashSet<ProductUserInteraction> ProductUserInteractions { get; set; } = new HashSet<ProductUserInteraction>();
+
+	public int Views { get; set; } = 0;
+	public int Sales { get; set; } = 0;
+	public int ratingCount { get; set; } = 0;
+	public int ratingSum { get; set; } = 0;
+	[Timestamp]
+	public byte[] TimestampFirstAdded { get; set; }
 }

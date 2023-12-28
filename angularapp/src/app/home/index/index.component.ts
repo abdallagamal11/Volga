@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { CategoryModel } from 'src/app/core/models/category-model';
 import { ProductModel } from 'src/app/core/models/product-model';
+import { CategoryService } from 'src/app/core/services/category.service';
 import { ProductService } from 'src/app/core/services/product.service';
 
 @Component({
@@ -7,9 +9,28 @@ import { ProductService } from 'src/app/core/services/product.service';
 	templateUrl: './index.component.html',
 	styleUrls: ['./index.component.css']
 })
-export class IndexComponent
+export class IndexComponent implements OnInit
 {
-	//public featuredProducts: ProductModel[] | undefined | null;
+	public parentCategories: CategoryModel[] | null = null;
 	numbers: number[] = Array(9).fill(5);
 
+	constructor(private categoryService: CategoryService)
+	{
+	}
+
+	ngOnInit()
+	{
+		this.fetchParentCategories();
+	}
+
+	fetchParentCategories()
+	{
+		this.categoryService.getParentCategories().subscribe((result) =>
+		{
+			if (result)
+			{
+				this.parentCategories = result;
+			}
+		});
+	}
 }

@@ -1,30 +1,21 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HeaderComponent } from './header/header.component';
-import { FooterComponent } from './footer/footer.component';
-import { ForbiddenComponent } from './forbidden/forbidden.component';
-import { ErrorNotFoundComponent } from './error-not-found/error-not-found.component';
-import { AppRoutingModule } from '../app-routing.module';
+import { NgModule } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
-import { CarouselComponent } from './carousel/carousel.component';
+import { RouterModule } from '@angular/router';
+import { ChildrenCategoriesCardComponent } from './children-categories-card/children-categories-card.component';
 
 @NgModule({
 	declarations: [
-		ForbiddenComponent,
-		ErrorNotFoundComponent,
-		HeaderComponent,
-		FooterComponent
+
+		ChildrenCategoriesCardComponent
 	],
 	imports: [
 		CommonModule,
-		AppRoutingModule,
+		RouterModule,
 		TranslateModule
 	],
 	exports: [
-		ForbiddenComponent,
-		ErrorNotFoundComponent,
-		HeaderComponent,
-		FooterComponent
+		ChildrenCategoriesCardComponent
 	]
 })
 export class SharedModule { }

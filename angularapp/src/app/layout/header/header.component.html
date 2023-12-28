@@ -111,7 +111,7 @@
 
 <div class="search-navbar">
 	<nav class="navbar navbar-light bg-white">
-		<div class="container">
+		<div class="container flex-md-row flex-column">
 			<a class="navbar-brand" [routerLink]="['/']">
 				<img
 					src="/assets/img/brand.svg"
@@ -122,12 +122,12 @@
 				/>
 				Volga
 			</a>
-			<div class="d-flex search-bar">
+			<div class="d-flex search-bar w-90 w-md-70">
 				<div
 					class="search-input-group input-group mx-auto form-outline"
 				>
 					<select
-						class="input-group-text form-select category-list"
+						class="input-group-text form-select category-list d-none d-sm-flex"
 						*ngIf="parentCategoryList !== null"
 					>
 						<option value="">

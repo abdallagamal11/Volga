@@ -81,7 +81,30 @@
 		</h5>
 		<div class="card-text">
 			<p class="product-card-description">
-				{{ productData?.description }}
+				<span class="stars">
+					<span *ngFor="let item of [1, 2, 3, 4, 5]" class="star">
+						<li
+							class="bi bi-star-fill"
+							*ngIf="productData!.ratingStars! >= item"
+						></li>
+						<li
+							class="bi bi-star-half"
+							*ngIf="
+								productData!.ratingStars! < item &&
+								item - productData!.ratingStars! == 0.5
+							"
+						></li>
+						<li
+							class="bi bi-star"
+							*ngIf="
+								productData!.ratingStars! < item &&
+								item - productData!.ratingStars! != 0.5
+							"
+						></li>
+					</span>
+				</span>
+				<span>({{ productData?.ratingCount }})</span>
+				<!-- {{ productData?.description }} -->
 			</p>
 		</div>
 		<div class="product-card-price text-center">

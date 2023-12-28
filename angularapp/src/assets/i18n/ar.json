@@ -1,5 +1,6 @@
 {
 	"account": {
+		"register": "تسجيل حساب جديد",
 		"birthdate": "تاريخ الميلاد",
 		"email": "البريد الإلكتروني",
 		"enter_password_to_confirm": "أدخل كلمة المرور الخاصة بك للتأكيد",

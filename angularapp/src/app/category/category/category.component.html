@@ -1,0 +1,13 @@
+<section *ngIf="childrenCategories">
+	<h3 class="section-header">Subcategories</h3>
+	<div class="category-cards row g-2">
+		<div
+			class="category-card col-6 col-md-4 col-lg-3"
+			*ngFor="let category of childrenCategories"
+		>
+			<app-children-categories-card
+				[category]="category"
+			></app-children-categories-card>
+		</div>
+	</div>
+</section>

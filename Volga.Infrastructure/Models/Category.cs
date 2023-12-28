@@ -22,4 +22,7 @@ public class Category
 
 	//	[InverseProperty("ParentCategory")]
 	public virtual ICollection<Category>? ChildCategories { get; set; }
+
+	[Required]
+	public string ImgUrl { get; set; } = string.Empty;
 }
