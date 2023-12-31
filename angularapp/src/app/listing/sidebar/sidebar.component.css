@@ -1,0 +1,58 @@
+div.panel
+{
+	border: none;
+	background-color: #fff;
+	border-radius: 10px;
+	padding: 5px 7px;
+	font-size: 100%;
+	margin-bottom: .8em;
+}
+
+.panel .heading
+{
+	font-size: 1.02em;
+	font-weight: 700;
+	text-align: center;
+	padding-bottom: 5px;
+	border-bottom: 1px solid #ccc;
+	user-select: none;
+}
+
+.form-check label
+{
+	cursor: pointer;
+	user-select: none;
+}
+
+.price-start,
+.price-end
+{
+	display: inline-block;
+	width: calc(50% - 1em);
+}
+
+.sellers
+{
+	max-height: 10em;
+	overflow-y: scroll;
+}
+
+.sellers::-webkit-scrollbar
+{
+	width: 5px;
+}
+
+.sellers:not(:hover)::-webkit-scrollbar-thumb
+{
+	background: transparent;
+}
+
+.sellers::-webkit-scrollbar-thumb
+{
+	background: #888;
+}
+
+.sellers::-webkit-scrollbar-track
+{
+	background: #f1f1f1;
+}

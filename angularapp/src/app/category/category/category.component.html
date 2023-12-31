@@ -11,3 +11,15 @@
 		</div>
 	</div>
 </section>
+
+<section *ngIf="products">
+	<app-listing
+		[products]="products"
+		[pagination]="pagination"
+		[sellers]="sellers"
+		[page]="page ?? 1"
+		[categoryId]="id"
+		(filterApplyEvent)="applyFilter($event)"
+		(PageApplyEvent)="changePage($event)"
+	></app-listing>
+</section>

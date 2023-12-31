@@ -65,4 +65,29 @@ public class CategoryService
 			ImgUrl = category.ImgUrl,
 		};
 	}
+
+	public CategoryDto? GetCategoryByIdWithChildren(int categoryId)
+	{
+		Category? category = _categoryRepository.Find(c => c.Id == categoryId);
+		if (category == null) return null;
+
+		var children = _categoryRepository.GetAllRaw().Where(c => c.parentId == categoryId).Select(c => new CategoryDto()
+		{
+			Id = c.Id,
+			parentId = c.parentId,
+			Name = c.Name,
+			Description = c.Description,
+			ImgUrl = c.ImgUrl,
+		}).ToList();
+
+		return new CategoryDto()
+		{
+			Id = category.Id,
+			parentId = category.parentId,
+			Name = category.Name,
+			Description = category.Description,
+			ImgUrl = category.ImgUrl,
+			ChildCategories = children
+		};
+	}
 }

@@ -1,7 +1,7 @@
 <div class="card">
 	<div class="product-card-img-top">
 		<!-- card-img-top -->
-		<a [routerLink]="['product', productData?.id]">
+		<a [routerLink]="['/product', productData?.id]">
 			<img
 				src="{{ productData?.imageUrl }}"
 				class="card-img-top img-fluid"
@@ -75,7 +75,7 @@
 			{{ productData?.vendorName }}
 		</p>
 		<h5 class="card-title">
-			<a [routerLink]="['product', productData?.id]">{{
+			<a [routerLink]="['/product', productData?.id]">{{
 				productData?.title
 			}}</a>
 		</h5>

@@ -1,0 +1,1 @@
+export type PartOf<T> = { [K in keyof T]?: any };

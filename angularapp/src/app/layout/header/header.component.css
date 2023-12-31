@@ -1,4 +1,5 @@
-.top-navbar .btn:hover
+.top-navbar .btn:hover,
+.top-navbar .btn:focus
 {
 	background-color: #f8f9fa;
 }

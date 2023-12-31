@@ -18,6 +18,10 @@ export const environment = {
 	},
 	productList: {
 		productsPerPage: 10,
+		pagination:
+		{
+			pageSize: 4
+		}
 	}
 };
 

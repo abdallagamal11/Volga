@@ -18,8 +18,8 @@ public class ProductDto
 	public int Stock { get; set; } = 0;
 	public int VendorId { get; set; }
 	public string VendorName { get; set; }
-	public int ratingCount { get; set; } = 0;
-	public int ratingSum { get; set; } = 0;
+	public int RatingCount { get; set; } = 0;
+	public int RatingSum { get; set; } = 0;
 	public int Views { get; set; } = 0;
 	public int Sales { get; set; } = 0;
 }

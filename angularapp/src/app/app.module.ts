@@ -1,19 +1,21 @@
 import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { AppComponent } from './app.component';
-import { AppRoutingModule } from './app-routing.module';
-import { ErrorInterceptor } from './core/helpers/error-interceptor';
-import { CoreModule } from './core/core.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouteReuseStrategy } from '@angular/router';
 import { TranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { LazyTranslateLoader } from './core/helpers/lazy-translate-loader';
+import { AppRoutingModule } from './app-routing.module';
+import { AppComponent } from './app.component';
+import { CoreModule } from './core/core.module';
 import { AuthHttpInterceptor } from './core/helpers/auth-http-interceptor';
+import { ErrorInterceptor } from './core/helpers/error-interceptor';
+import { HttpCoreInterceptor } from './core/helpers/http-core-interceptor';
+import { LazyTranslateLoader } from './core/helpers/lazy-translate-loader';
 import { LowerCaseUrlSerializerProvider } from './core/helpers/lowercase-url-serializer';
+import { VgRouteReuseStrategy } from './core/helpers/vg-route-reuse-strategy';
 import { AuthService } from './core/services/auth.service';
 import { CultureService } from './core/services/culture.service';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpCoreInterceptor } from './core/helpers/http-core-interceptor';
 import { LayoutModule } from './layout/layout.module';
 
 @NgModule({
@@ -34,7 +36,7 @@ import { LayoutModule } from './layout/layout.module';
 				//useFactory: HttpLoaderFactory,
 				deps: [HttpClient]
 			}
-		})
+		}),
 	],
 	providers: [
 		[
@@ -54,9 +56,10 @@ import { LayoutModule } from './layout/layout.module';
 				useClass: AuthHttpInterceptor,
 				multi: true
 			},
+			{ provide: RouteReuseStrategy, useClass: VgRouteReuseStrategy },
 			AuthService,
 			TranslateService,
-			CultureService
+			CultureService,
 		]
 	],
 	bootstrap: [AppComponent]

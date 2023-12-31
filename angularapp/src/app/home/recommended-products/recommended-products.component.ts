@@ -3,9 +3,6 @@ import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild, ViewChildr
 import { ProductModel } from 'src/app/core/models/product-model';
 import { CultureService } from 'src/app/core/services/culture.service';
 import { ProductService } from 'src/app/core/services/product.service';
-import { environment } from 'src/app/environment';
-import { CarouselComponent } from 'src/app/shared/carousel/carousel.component';
-import { register } from 'swiper/element/bundle';
 
 @Component({
 	selector: 'app-recommended-products',

@@ -60,8 +60,9 @@ public class ProductSeeder
 			.RuleFor(p => p.Title, f => f.Commerce.ProductName())
 			.RuleFor(p => p.ImageUrl, f => GetValidImageUrl(f))
 			.RuleFor(p => p.Description, f => f.Lorem.Paragraph())
+			.RuleFor(p => p.Stock, f => f.Random.Number(10, 100))
 			.RuleFor(p => p.Price, f => f.Random.Double(10, 1000)) // Adjust the range as needed
-			.RuleFor(p => p.Discount, f => f.Random.Double(0, 50)) // Adjust the range as needed
+			.RuleFor(p => p.Discount, f => f.Random.Number(0, 0)) // Adjust the range as needed//f.Random.Double(0, 50)
 			.RuleFor(p => p.VendorId, f => f.PickRandom(randomVendor));
 	}
 
@@ -201,7 +202,7 @@ public static class DatabaseSeeder
 				.RuleFor(p => p.Stock, f => f.Random.Number(10, 100))
 				.RuleFor(p => p.VendorId, (f, p) => dbContext.Vendors.OrderBy(v => Guid.NewGuid()).Select(v => v.Id).FirstOrDefault());
 
-			var products = productFaker.Generate(10); // Generate 10 fake products
+			var products = productFaker.Generate(100); // Generate 10 fake products
 
 			dbContext.Set<Product>().AddRange(products);
 			dbContext.SaveChanges();
@@ -232,6 +233,11 @@ public static class DatabaseSeeder
 
 			userInteraction.UserId = newKey.userId;
 			userInteraction.ProductId = newKey.productId;
+
+			if (dbContext.ProductUserInteractions.FirstOrDefault(pui => pui.ProductId == newKey.productId && pui.UserId == newKey.userId) != null)
+			{
+				continue;
+			}
 
 			dbContext.ProductUserInteractions.Add(userInteraction);
 		}

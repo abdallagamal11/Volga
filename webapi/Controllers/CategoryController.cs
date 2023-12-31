@@ -27,6 +27,13 @@ public class CategoryController : BaseAPIController
 		return Ok(categoryDto);
 	}
 
+	[HttpGet("withChildren/{id}")]
+	public IActionResult GetWithChildren(int? id)
+	{
+		if (id == null) return BadRequest();
+		return Ok(_categoryService.GetCategoryByIdWithChildren((int)id));
+	}
+
 	[HttpGet("parentAll")]
 	public IActionResult GetAllParent()
 	{
@@ -39,5 +46,4 @@ public class CategoryController : BaseAPIController
 		if (id == null) return BadRequest();
 		return Ok(_categoryService.GetChildCategories((int)id));
 	}
-
 }

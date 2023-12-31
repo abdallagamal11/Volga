@@ -15,7 +15,7 @@ export class ErrorInterceptor implements HttpInterceptor
 		return next.handle(req).pipe(catchError(err =>
 		{
 			if (err.status === 403) this.handleForbidden();
-			if (err.status === 404) this.handleNotFound();
+			//			if (err.status === 404) this.handleNotFound();
 			if (err.status === 401) this.handleUnauthorized();
 			const error = err;
 			return throwError(() => error);

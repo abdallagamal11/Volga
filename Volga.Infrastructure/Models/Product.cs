@@ -44,8 +44,8 @@ public class Product
 
 	public int Views { get; set; } = 0;
 	public int Sales { get; set; } = 0;
-	public int ratingCount { get; set; } = 0;
-	public int ratingSum { get; set; } = 0;
+	public int RatingCount { get; set; } = 0;
+	public int RatingSum { get; set; } = 0;
 	[Timestamp]
 	public byte[] TimestampFirstAdded { get; set; }
 }

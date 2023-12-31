@@ -1,0 +1,105 @@
+<form *ngIf="filtersForm" novalidate [formGroup]="filtersForm">
+	<div class="panel">
+		<p class="heading text-uppercase">Discount</p>
+		<div class="body">
+			<div class="form-check" formGroupName="discount">
+				<input
+					class="form-check-input"
+					type="checkbox"
+					id="showOnlyDiscount"
+					formControlName="showOnlyDiscountedItems"
+				/>
+				<label class="form-check-label" for="showOnlyDiscount">
+					Show only discounted items
+				</label>
+			</div>
+		</div>
+	</div>
+
+	<div class="panel">
+		<p class="heading text-uppercase">Price</p>
+		<div class="body">
+			<div formGroupName="price">
+				<input
+					class="form-control price-start"
+					type="number"
+					value=""
+					placeholder="Start"
+					formControlName="start"
+					(keypress)="preventNegativeFloat($event)"
+					(paste)="preventNegativeFloat($event)"
+				/>
+				-
+				<input
+					class="form-control price-end"
+					type="number"
+					value=""
+					placeholder="End"
+					formControlName="end"
+					(keypress)="preventNegativeFloat($event)"
+					(paste)="preventNegativeFloat($event)"
+				/>
+			</div>
+			<div class="mx-auto text-center mt-1">
+				<button
+					class="btn btn-primary vg-btn"
+					(click)="applyGroupByGroupName('price')"
+				>
+					Apply
+				</button>
+			</div>
+		</div>
+	</div>
+
+	<div class="panel" *ngIf="sellers">
+		<p class="heading text-uppercase">Sellers</p>
+		<div class="body" formGroupName="seller">
+			<div class="sellers">
+				<div
+					class="form-check"
+					*ngFor="let seller of sellers"
+					formArrayName="sellers"
+				>
+					<input
+						class="form-check-input"
+						type="checkbox"
+						id="seller-{{ seller[0] }}"
+						[value]="seller[0]"
+						[checked]="getSellerFormControl(seller[0])"
+						(change)="onSellerCheckChanged($event)"
+					/>
+					<label
+						class="form-check-label"
+						for="seller-{{ seller[0] }}"
+						>{{ seller[1] }}</label
+					>
+				</div>
+			</div>
+			<div class="mx-auto text-center mt-1">
+				<button
+					class="btn btn-primary vg-btn"
+					(click)="applyGroupByGroupName('seller')"
+				>
+					Apply
+				</button>
+			</div>
+		</div>
+	</div>
+
+	<div class="panel">
+		<p class="heading text-uppercase">Stock</p>
+		<div class="body">
+			<div class="form-check" formGroupName="stock">
+				<input
+					class="form-check-input"
+					type="checkbox"
+					id="showOutOfStock"
+					formControlName="includeOutOfStock"
+				/>
+				<label class="form-check-label" for="showOutOfStock">
+					Show Out Of Stock?
+				</label>
+			</div>
+		</div>
+	</div>
+</form>

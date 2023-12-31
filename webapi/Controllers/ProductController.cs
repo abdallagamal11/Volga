@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Volga.Core.Dtos;
+using Volga.Core.Dtos.ProductListing;
 using Volga.Core.Enums;
 using Volga.Core.Services;
 
@@ -29,11 +30,11 @@ public class ProductController : BaseAPIController
 		return Ok(await productService.GetRecommendedProductsAsync(take, categoryId));
 	}
 
-	[HttpGet("bycategory/{categoryId}")]
-	public async Task<ActionResult<List<ProductDto>>> GetProductsByCategory(int? categoryId, ProductSort? sort, int? take, int? skip)
+	[HttpPost("bycategory/{categoryId}")]
+	public async Task<ActionResult<ProductListPageDto<ProductDto>>> GetProductsByCategory(int? categoryId, ProductSort? sort, int? take, int? skip, ProductFilterDto? filters)
 	{
-		if (categoryId == null) return NotFound();
-		List<ProductDto>? products = await productService.GetProductsByCategoryId(categoryId, sort, take, skip);
+		if (categoryId == null) return BadRequest();
+		ProductListPageDto<ProductDto>? products = await productService.GetProductsByCategoryId(categoryId, sort, take, skip, filters);
 		return Ok(products);
 	}
 }

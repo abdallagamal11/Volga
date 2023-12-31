@@ -20,4 +20,9 @@ export class CategoryService
 	{
 		return this.http.get<CategoryModel[] | null>(environment.apiUrl + '/category/childrenAll', { params: { id: id } });
 	}
+
+	getCategoryWithChildren(id: number): Observable<CategoryModel | null>
+	{
+		return this.http.get<CategoryModel | null>(environment.apiUrl + '/category/withChildren/' + id);
+	}
 }

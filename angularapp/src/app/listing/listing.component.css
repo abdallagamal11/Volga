@@ -1,0 +1,63 @@
+.sidebar
+{
+	min-height: 100%;
+	background-color: #e7e8ea !important;
+	border-radius: 5px;
+}
+
+.pagination a
+{
+	cursor: pointer;
+	user-select: none;
+}
+
+.pagination a:hover
+{
+	text-decoration: underline;
+}
+
+.content
+{
+	min-height: 100%;
+}
+
+.offcanvas,
+.offcanvas-xxl,
+.offcanvas-xl,
+.offcanvas-lg,
+.offcanvas-md,
+.offcanvas-sm
+{
+	--bs-offcanvas-height: 70vh;
+}
+
+@media (max-width: 767.98px)
+{
+	.sidebar
+	{
+		min-height: auto;
+		background-color: #e7e8ea !important;
+		border-radius: 5px 5px 0 0;
+		overflow-y: auto;
+	}
+
+	.sidebar::-webkit-scrollbar
+	{
+		width: 5px;
+	}
+
+	.sidebar:not(:hover)::-webkit-scrollbar-thumb
+	{
+		background: transparent;
+	}
+
+	.sidebar::-webkit-scrollbar-track
+	{
+		background: #f1f1f1;
+	}
+
+	.sidebar::-webkit-scrollbar-thumb
+	{
+		background: #888;
+	}
+}

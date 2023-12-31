@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Volga.Core;
 using Volga.Infrastructure;
 
 namespace webapi.Controllers;
@@ -26,12 +27,17 @@ public class SeederController : BaseAPIController
 
 		//		DatabaseSeeder.SeedProductUserInteractions(_vgContext);
 
+		var ps = new ProductSeeder(_vgContext);
+		ps.Seed(150);
+
+		//		DatabaseSeeder.SeedProducts(_vgContext);
+		DatabaseSeeder.SeedProductUserInteractions(_vgContext);
 		var products = _vgContext.Products.ToList();
 
 		foreach (var product in products)
 		{
-			product.ratingSum = _vgContext.UserReviews.Where(ur => ur.ProductId == product.Id).Sum(p => p.Rating);
-			product.ratingCount = _vgContext.UserReviews.Where(ur => ur.ProductId == product.Id).Count();
+			product.RatingSum = _vgContext.UserReviews.Where(ur => ur.ProductId == product.Id).Sum(p => p.Rating);
+			product.RatingCount = _vgContext.UserReviews.Where(ur => ur.ProductId == product.Id).Count();
 			product.Views = _vgContext.ProductUserInteractions.Where(p => p.ProductId == product.Id).Sum(p => p.Views);
 			product.Sales = _vgContext.ProductUserInteractions.Where(p => p.ProductId == product.Id).Sum(p => p.Sales);
 		}

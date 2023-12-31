@@ -1,0 +1,58 @@
+<button
+	class="btn btn-outline-primary d-md-none w-100 mx-auto"
+	type="button"
+	data-bs-toggle="offcanvas"
+	data-bs-target="#offcanvasBottom"
+	aria-controls="offcanvasBottom"
+>
+	Filters
+</button>
+
+<div class="d-flex">
+	<div
+		class="col-12 col-md-4 col-lg-3 p-2 sidebar offcanvas-md offcanvas-bottom"
+		tabindex="-1"
+		id="offcanvasBottom"
+		aria-labelledby="offcanvasBottomLabel"
+	>
+		<div class="wrapper">
+			<app-sidebar
+				[category]="category"
+				[filters]="filtersDefault"
+				[sellers]="sellerList"
+				(filterApplyEvent)="applyFilter($event)"
+			></app-sidebar>
+		</div>
+	</div>
+	<div class="col-12 col-md-8 col-lg-9 p-1 pt-2 d-flex flex-column content">
+		<div class="d-flex flex-wrap mb-auto">
+			<app-card
+				*ngFor="let product of products"
+				[productData]="product"
+				class="p-1 col-xs-12 col-sm-6 col-md-6 col-lg-4 col-xl-3"
+			></app-card>
+		</div>
+		<div class="d-flex justify-content-center align-items-center">
+			<nav aria-label="...">
+				<ul class="pagination">
+					<li class="page-item" [ngClass]="{ disabled: page == 1 }">
+						<a class="page-link" (click)="prevPage()">Previous</a>
+					</li>
+					<li
+						class="page-item"
+						[ngClass]="{ active: page == i }"
+						*ngFor="let i of pageList"
+					>
+						<a class="page-link" (click)="changePage(i)">{{ i }}</a>
+					</li>
+					<li
+						class="page-item"
+						[ngClass]="{ disabled: page == totalPages }"
+					>
+						<a class="page-link" (click)="nextPage()">Next</a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>

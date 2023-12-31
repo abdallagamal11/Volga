@@ -15,4 +15,6 @@ export interface ProductModel
 	rating: number;
 	priceAfterDiscount: number;
 	ratingStars: number;
+	views: number,
+	sales: number
 }
