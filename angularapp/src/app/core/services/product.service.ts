@@ -61,7 +61,7 @@ export class ProductService
 		return rating;
 	}
 
-	getPagedProductsByCategory(categoryId: number, page: number = 1, sort: ProductSort = ProductSort.Default, filters: PartOf<ProductListingFiltersModel> | null | undefined = null): Observable<ProductListPageModel | null>
+	getPagedProductsByCategory(categoryId: number, page: number = 1, sort: ProductSort = ProductSort.Popularity, filters: PartOf<ProductListingFiltersModel> | null | undefined = null): Observable<ProductListPageModel | null>
 	{
 		if (!categoryId) return of(null);
 		if (!page) page = 1;

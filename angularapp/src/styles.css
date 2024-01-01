@@ -1,14 +1,15 @@
 /* You can add global styles to this file, and also import other style files */
-@import "./assets/bootstrap.css";
+@import "./assets/css/bootstrap.css";
 @import "/node_modules/bootstrap-icons/font/bootstrap-icons.min.css";
 @import "./assets/css/bs-width-extend.css";
+/* @import "./assets/css/mdb.min.css"; */
 
 @import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
-
 
 body
 {
 	font-family: 'Poppins', sans-serif;
+	scroll-behavior: smooth;
 }
 
 /* 

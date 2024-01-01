@@ -12,10 +12,12 @@ div.panel
 {
 	font-size: 1.02em;
 	font-weight: 700;
-	text-align: center;
+	padding-inline-start: 10px;
+	padding-top: 5px;
 	padding-bottom: 5px;
-	border-bottom: 1px solid #ccc;
+	/* border-bottom: 1px solid #ccc; */
 	user-select: none;
+	position: relative;
 }
 
 .form-check label
@@ -55,4 +57,12 @@ div.panel
 .sellers::-webkit-scrollbar-track
 {
 	background: #f1f1f1;
+}
+
+.reset-button-wrapper
+{
+	position: absolute;
+	top: 50%;
+	right: 0;
+	transform: translateY(-50%);
 }

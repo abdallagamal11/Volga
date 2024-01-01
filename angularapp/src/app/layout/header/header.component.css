@@ -46,6 +46,12 @@
 	width: 80%;
 }
 
+/* .search-input-group .form-control
+{
+	border-top: 1px solid var(--mdb-border-color);
+	border-bottom: 1px solid var(--mdb-border-color);
+} */
+
 .form-control:focus,
 .form-select:focus
 {

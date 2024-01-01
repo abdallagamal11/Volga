@@ -24,7 +24,45 @@
 			></app-sidebar>
 		</div>
 	</div>
-	<div class="col-12 col-md-8 col-lg-9 p-1 pt-2 d-flex flex-column content">
+	<div
+		class="col-12 col-md-8 col-lg-9 p-1 pt-2 d-flex flex-column content"
+		*ngIf="products && products.length > 0; else noproducts"
+	>
+		<div class="top-bar d-flex justify-content-between px-3">
+			<div
+				class="num-found d-flex align-items-center justify-content-center"
+			>
+				{{ pagination?.totalRecords }} items found.
+			</div>
+			<div class="sort-options">
+				<div class="dropdown">
+					<button
+						class="btn btn-outline-light dropdown-toggle text-body"
+						type="button"
+						data-bs-toggle="dropdown"
+						aria-expanded="false"
+					>
+						{{
+							"productSort." + sortOptions[currentSortIndex].value
+								| translate
+						}}
+					</button>
+					<ul class="dropdown-menu">
+						<li *ngFor="let item of sortOptions">
+							<a
+								class="dropdown-item"
+								[ngClass]="{ active: item.key == sort }"
+								href="#"
+								(click)="setSortOption($event, item)"
+								>{{
+									"productSort." + item.value | translate
+								}}</a
+							>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
 		<div class="d-flex flex-wrap mb-auto">
 			<app-card
 				*ngFor="let product of products"
@@ -32,7 +70,8 @@
 				class="p-1 col-xs-12 col-sm-6 col-md-6 col-lg-4 col-xl-3"
 			></app-card>
 		</div>
-		<div class="d-flex justify-content-center align-items-center">
+
+		<div class="d-flex justify-content-center align-items-center mt-3">
 			<nav aria-label="...">
 				<ul class="pagination">
 					<li class="page-item" [ngClass]="{ disabled: page == 1 }">
@@ -55,4 +94,7 @@
 			</nav>
 		</div>
 	</div>
+	<ng-template #noproducts>
+		<div class="text-center w-100">No Products Found!</div>
+	</ng-template>
 </div>

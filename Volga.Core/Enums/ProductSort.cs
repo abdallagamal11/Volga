@@ -2,7 +2,6 @@
 
 public enum ProductSort
 {
-	Default,
 	Popularity,
 	Rating,
 	PriceLowToHigh,

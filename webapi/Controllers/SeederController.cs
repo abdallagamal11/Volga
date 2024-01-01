@@ -16,6 +16,20 @@ public class SeederController : BaseAPIController
 	public IActionResult Seeder()
 	{
 
+		//CategorySeeder categorySeeder = new CategorySeeder(_context);
+		//categorySeeder.Seed(10);
+
+		//VendorSeeder vendorSeeder = new VendorSeeder(_context);
+		//vendorSeeder.Seed(10);
+
+		//ProductSeeder productSeeder = new ProductSeeder(_context);
+		//productSeeder.Seed(20);
+
+		//UserReviewSeeder reviewsSeeder = new UserReviewSeeder(_context);
+		//reviewsSeeder.Seed(10);
+
+		//	GetProductsByCategoryId(10);
+
 		//var categories = _vgContext.Categories.ToList();
 
 		//int i = 0;

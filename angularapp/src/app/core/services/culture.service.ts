@@ -30,7 +30,7 @@ export class CultureService
 			{
 				const rtlCss = document.createElement('link');
 				rtlCss.rel = 'stylesheet';
-				rtlCss.href = './assets/bootstrap.rtl.min.css';
+				rtlCss.href = './assets/css/rtl.css';
 				rtlCss.id = 'rtlCss';
 
 				this.document.querySelector('html')?.setAttribute('dir', 'rtl');

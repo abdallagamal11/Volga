@@ -80,15 +80,16 @@ public class ProductService
 				queryable = queryable.OrderByDescending(p => p.RatingSum / (p.RatingCount == 0 ? 1 : p.RatingCount)).ThenByDescending(p => p.RatingCount);
 				break;
 			case ProductSort.PriceLowToHigh:
-				queryable = queryable.OrderBy(p => p.Price * (p.Discount == 0 ? 1 : p.Discount / 100));
+				queryable = queryable.OrderBy(p => p.Price - (p.Discount / 100 * p.Price));
 				break;
 			case ProductSort.PriceHighToLow:
-				queryable = queryable.OrderByDescending(p => p.Price * (p.Discount == 0 ? 1 : p.Discount / 100));
+				queryable = queryable.OrderByDescending(p => p.Price - (p.Discount / 100 * p.Price));
 				break;
 			default:
 				queryable = queryable.OrderBy(p => p.Id);
 				break;
 		}
+
 		return queryable;
 	}
 
@@ -119,19 +120,6 @@ public class ProductService
 
 	public async Task<List<ProductDto>?> GetRecommendedProductsAsync(int take = 0, int categoryId = 0)
 	{
-		//CategorySeeder categorySeeder = new CategorySeeder(_context);
-		//categorySeeder.Seed(10);
-
-		//VendorSeeder vendorSeeder = new VendorSeeder(_context);
-		//vendorSeeder.Seed(10);
-
-		//ProductSeeder productSeeder = new ProductSeeder(_context);
-		//productSeeder.Seed(20);
-
-		//UserReviewSeeder reviewsSeeder = new UserReviewSeeder(_context);
-		//reviewsSeeder.Seed(10);
-
-		//	GetProductsByCategoryId(10);
 		List<ProductDto>? productList;
 		IQueryable<ProductDto> query = _productRepository
 			.GetAllRaw()
@@ -148,7 +136,7 @@ public class ProductService
 				Stock = p.Stock,
 				VendorId = p.VendorId,
 				VendorName = p.Vendor.Name,
-				RatingCount = p.UserReviews.Count(),
+				RatingCount = p.RatingCount,
 				RatingSum = p.RatingSum,
 			});
 		if (categoryId > 0) query = query.Where(p => p.CategoryId == categoryId);

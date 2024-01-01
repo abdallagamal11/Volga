@@ -13,13 +13,17 @@
 </section>
 
 <section *ngIf="products">
+	<h3 class="section-header" *ngIf="category?.name">{{ category?.name }}</h3>
 	<app-listing
 		[products]="products"
 		[pagination]="pagination"
 		[sellers]="sellers"
 		[page]="page ?? 1"
 		[categoryId]="id"
+		[category]="category"
+		[sort]="sort"
 		(filterApplyEvent)="applyFilter($event)"
 		(PageApplyEvent)="changePage($event)"
+		(SortApplyEvent)="applySort($event)"
 	></app-listing>
 </section>

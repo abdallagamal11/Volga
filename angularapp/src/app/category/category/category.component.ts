@@ -4,13 +4,11 @@ import { Subscription } from 'rxjs';
 import { ProductSort } from 'src/app/core/enums/productSort';
 import { CategoryModel } from 'src/app/core/models/category-model';
 import { PaginationModel } from 'src/app/core/models/pagination-model';
-import { ProductListPageModel } from 'src/app/core/models/product-list-page-model';
 import { ProductListingFiltersModel } from 'src/app/core/models/product-listing-filters';
 import { ProductModel } from 'src/app/core/models/product-model';
 import { CategoryService } from 'src/app/core/services/category.service';
 import { ProductService } from 'src/app/core/services/product.service';
 import { PartOf } from 'src/app/core/types/part-of';
-import { environment } from 'src/app/environment';
 
 @Component({
 	selector: 'app-category',
@@ -31,6 +29,7 @@ export class CategoryComponent implements OnInit, OnDestroy
 	filters: PartOf<ProductListingFiltersModel> | undefined;
 	pagination: PaginationModel | undefined;
 	sellers: object | undefined;
+	category: CategoryModel | undefined;
 
 	constructor(private routedData: ActivatedRoute, private categoryService: CategoryService, private productService: ProductService)
 	{
@@ -45,6 +44,14 @@ export class CategoryComponent implements OnInit, OnDestroy
 			this.page = paramsData['page'];
 
 			this.getProductsData();
+			if (this.id && !isNaN(this.id))
+				this.categoryService.getCategoryWithChildren(this.id).subscribe(result =>
+				{
+					if (result && result.id !== undefined)
+					{
+						this.category = result;
+					}
+				});
 		});
 	}
 
@@ -54,7 +61,7 @@ export class CategoryComponent implements OnInit, OnDestroy
 		{
 			this.categoryService.getChildrenCategories(this.id).subscribe(result =>
 			{
-				console.log(result);
+				//			console.log(result);
 
 				if (result && result.length > 0) this.childrenCategories = result;
 			});
@@ -84,6 +91,14 @@ export class CategoryComponent implements OnInit, OnDestroy
 	changePage(value: number)
 	{
 		this.page = value;
+		this.getProductsData();
+	}
+	applySort(value: ProductSort)
+	{
+		this.sort = value;
+		console.log(value);
+
+		this.page = 1;
 		this.getProductsData();
 	}
 

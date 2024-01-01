@@ -17,7 +17,23 @@
 	</div>
 
 	<div class="panel">
-		<p class="heading text-uppercase">Price</p>
+		<p class="heading text-uppercase">
+			Price
+			<span
+				*ngIf="
+					filtersForm.get('price')?.value &&
+					filtersForm.get('price')?.touched
+				"
+				class="reset-button-wrapper"
+			>
+				<button
+					class="btn btn-light"
+					(click)="filtersForm.controls['price'].reset()"
+				>
+					Reset
+				</button>
+			</span>
+		</p>
 		<div class="body">
 			<div formGroupName="price">
 				<input
@@ -47,6 +63,45 @@
 				>
 					Apply
 				</button>
+			</div>
+		</div>
+	</div>
+
+	<div class="panel">
+		<p class="heading text-uppercase">
+			Rating
+			<span
+				*ngIf="filtersForm.get('rating')?.get('showWithRating')?.value"
+				class="reset-button-wrapper"
+			>
+				<button
+					class="btn btn-light"
+					(click)="
+						filtersForm.controls['rating']
+							.get('showWithRating')
+							?.reset()
+					"
+				>
+					Reset
+				</button>
+			</span>
+		</p>
+		<div class="body" formGroupName="rating">
+			<div class="form-check" *ngFor="let i of [1, 2, 3, 4, 5]">
+				<input
+					class="form-check-input"
+					type="radio"
+					[value]="i"
+					id="showAboveRating{{ i }}"
+					formControlName="showWithRating"
+				/>
+				<label class="form-check-label" for="showAboveRating{{ i }}">
+					<ng-container *ngFor="let item of createRange(i)">
+						<i class="bi bi-star-fill text-primary"></i>
+					</ng-container>
+					<span *ngIf="i == 5"> Only</span>
+					<span *ngIf="i < 5"> & Above</span>
+				</label>
 			</div>
 		</div>
 	</div>

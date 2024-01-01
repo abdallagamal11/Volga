@@ -8,33 +8,41 @@ import { PartOf } from '../core/types/part-of';
 import { ProductListPageModel } from '../core/models/product-list-page-model';
 import { environment } from '../environment';
 import { PaginationModel } from '../core/models/pagination-model';
+import { ProductSort } from '../core/enums/productSort';
 
 @Component({
 	selector: 'app-listing',
 	templateUrl: './listing.component.html',
 	styleUrls: ['./listing.component.css']
 })
-export class ListingComponent implements OnInit, OnChanges
+export class ListingComponent implements OnChanges
 {
 	@Input() products: ProductModel[] | undefined;
-	totalPages: number = 0;
-	totalRecords: number = 0;
-	category: CategoryModel | undefined;
-	filtersDefault: IForm<ProductListingFiltersModel>;
-	data: ProductListPageModel | undefined;
-	filters: PartOf<ProductListingFiltersModel> | undefined;
 	@Input() pagination: PaginationModel | undefined;
 	@Input() sellers: object | undefined;
 	@Input() page: number = 1;
 	@Input() categoryId: number | undefined;
+	@Input() category: CategoryModel | undefined;
 	@Output() filterApplyEvent = new EventEmitter<object>();
 	@Output() PageApplyEvent = new EventEmitter<number>();
+	@Output() SortApplyEvent = new EventEmitter<number>();
+	totalPages: number = 0;
+	totalRecords: number = 0;
+	// category: CategoryModel | undefined;
+	filtersDefault: IForm<ProductListingFiltersModel>;
+	data: ProductListPageModel | undefined;
+	filters: PartOf<ProductListingFiltersModel> | undefined;
 	sellerList: [string, string][] | undefined;
 	pageSize: number;
 	pageList: number[] = [];
+	sortOptions: { key: number, value: string }[] = Object.entries(ProductSort).filter(elm => !isNaN(Number(elm[1]))).map(elm => { return { key: parseInt(elm[1].toString()), value: elm[0].toString() }; });
+	@Input() sort: ProductSort | undefined;
+	currentSortIndex: number = 0;
 
 	constructor(private categoryService: CategoryService)
 	{
+		console.log(this.sortOptions);
+
 		this.pageSize = environment.productList.pagination.pageSize;
 		this.filtersDefault = {
 			discount: { showOnlyDiscountedItems: [false] },
@@ -50,11 +58,6 @@ export class ListingComponent implements OnInit, OnChanges
 		this.filters = {};
 	}
 
-	ngOnInit(): void
-	{
-	}
-
-
 	ngOnChanges(changes: SimpleChanges): void
 	{
 		if (changes['products'])
@@ -69,15 +72,25 @@ export class ListingComponent implements OnInit, OnChanges
 			this.setPagination();
 		}
 
-		if (changes['categoryId'])
-			if (this.categoryId && !isNaN(this.categoryId))
-				this.categoryService.getCategoryWithChildren(this.categoryId).subscribe(result =>
-				{
-					if (result && result.id !== undefined)
-					{
-						this.category = result;
-					}
-				});
+		if (changes['page'])
+		{
+			window.scrollTo(0, 0);
+		}
+
+		if (changes['sort'])
+		{
+			this.currentSortIndex = this.sortOptions.findIndex(obj => obj.key == this.sort);
+		}
+
+		// if (changes['categoryId'])
+		// 	if (this.categoryId && !isNaN(this.categoryId))
+		// 		this.categoryService.getCategoryWithChildren(this.categoryId).subscribe(result =>
+		// 		{
+		// 			if (result && result.id !== undefined)
+		// 			{
+		// 				this.category = result;
+		// 			}
+		// 		});
 	}
 
 	setPagination()
@@ -104,5 +117,11 @@ export class ListingComponent implements OnInit, OnChanges
 	{
 		this.filters = { ...this.filters, ...value };
 		this.filterApplyEvent.emit(this.filters);
+	}
+	setSortOption(e: Event, item: { key: number, value: string })
+	{
+		e.preventDefault();
+		let sort = item.key;
+		this.SortApplyEvent.emit(sort);
 	}
 }

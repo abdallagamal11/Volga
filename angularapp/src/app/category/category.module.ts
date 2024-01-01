@@ -18,7 +18,6 @@ let routes: Routes = [{
 		CommonModule,
 		RouterModule.forChild(routes),
 		SharedModule,
-		ProductModule,
 		ListingModule
 	]
 })

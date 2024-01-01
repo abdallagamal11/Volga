@@ -35,7 +35,7 @@
 {
 	.sidebar
 	{
-		min-height: auto;
+		min-height: 70vh;
 		background-color: #e7e8ea !important;
 		border-radius: 5px 5px 0 0;
 		overflow-y: auto;

@@ -1,21 +1,21 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ListingComponent } from './listing.component';
-import { TopbarComponent } from './topbar/topbar.component';
-import { ProductModule } from '../product/product.module';
+import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
+import { SharedModule } from '../shared/shared.module';
+import { ListingComponent } from './listing.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   declarations: [
     ListingComponent,
-    TopbarComponent,
     SidebarComponent
   ],
   imports: [
     CommonModule,
-    ProductModule,
-    ReactiveFormsModule
+    SharedModule,
+    ReactiveFormsModule,
+    TranslateModule
   ],
   exports: [
     ListingComponent

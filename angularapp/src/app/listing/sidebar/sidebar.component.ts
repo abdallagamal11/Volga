@@ -105,6 +105,11 @@ export class SidebarComponent implements OnChanges
 		}
 	}
 
+	createRange(value: number): number[]
+	{
+		return new Array(value).fill(0).map((n, index) => index + 1);
+	}
+
 	getSellerFormControl(sellerId: string): AbstractControl | null
 	{
 		return this.sellersFormArr?.controls.find((control) => control.value === sellerId) || null;

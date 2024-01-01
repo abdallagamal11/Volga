@@ -1,18 +1,22 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CardComponent } from './card/card.component';
-import { RouterModule } from '@angular/router';
+import { CardComponent } from '../shared/card/card.component';
+import { RouterModule, Routes } from '@angular/router';
+import { ProductComponent } from './product/product.component';
+
+let routes: Routes = [
+	{ path: ':id', component: ProductComponent }
+];
 
 @NgModule({
 	declarations: [
-		CardComponent
+		ProductComponent
 	],
 	imports: [
 		CommonModule,
-		RouterModule
+		RouterModule.forChild(routes)
 	],
 	exports: [
-		CardComponent
 	]
 })
 export class ProductModule { }

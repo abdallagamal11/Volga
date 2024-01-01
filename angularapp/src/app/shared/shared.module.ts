@@ -3,10 +3,11 @@ import { NgModule } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { RouterModule } from '@angular/router';
 import { ChildrenCategoriesCardComponent } from './children-categories-card/children-categories-card.component';
+import { CardComponent } from './card/card.component';
 
 @NgModule({
 	declarations: [
-
+		CardComponent,
 		ChildrenCategoriesCardComponent
 	],
 	imports: [
@@ -15,7 +16,8 @@ import { ChildrenCategoriesCardComponent } from './children-categories-card/chil
 		TranslateModule
 	],
 	exports: [
-		ChildrenCategoriesCardComponent
+		ChildrenCategoriesCardComponent,
+		CardComponent
 	]
 })
 export class SharedModule { }

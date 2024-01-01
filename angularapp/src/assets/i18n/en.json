@@ -46,5 +46,11 @@
 	"INVALID_GENDER_SELECTION": "Invalid Gender Selection",
 	"Login": "Login",
 	"Profile": "Profile",
-	"Register": "Register"
+	"Register": "Register",
+	"productSort": {
+		"Popularity": "Popularity",
+		"Rating": "Rating",
+		"PriceLowToHigh": "Price Low to High",
+		"PriceHighToLow": "Price High to Low"
+	}
 }

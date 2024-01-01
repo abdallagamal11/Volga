@@ -19,7 +19,6 @@ const routes: Routes = [
 	imports: [
 		RouterModule.forChild(routes),
 		CommonModule,
-		ProductModule,
 		CarouselModule,
 		SharedModule
 	]
