@@ -6,3 +6,5 @@
 .vscode/
 */seeders.cs
 */SeederController.cs
+*/DataSeeder.cs
+SeederController.cs
