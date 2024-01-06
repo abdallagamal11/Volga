@@ -1,4 +1,5 @@
-import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild, ViewChildren } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnDestroy, ViewChildren } from '@angular/core';
+import { Subscription } from 'rxjs';
 
 import { ProductModel } from 'src/app/core/models/product-model';
 import { CultureService } from 'src/app/core/services/culture.service';
@@ -9,7 +10,7 @@ import { ProductService } from 'src/app/core/services/product.service';
 	templateUrl: './recommended-products.component.html',
 	styleUrls: ['./recommended-products.component.css'],
 })
-export class RecommendedProductsComponent implements OnInit
+export class RecommendedProductsComponent implements OnDestroy
 {
 	currentLang = this.cultureService.currentLanguage;
 	@ViewChildren('carouselItems') carouselItems: ElementRef[] = [];
@@ -31,13 +32,9 @@ export class RecommendedProductsComponent implements OnInit
 			numScroll: 4
 		},
 	};
+	private subscription!: Subscription;
 
-	ngOnInit()
-	{
-		// 
-	}
-
-	public featuredProducts: ProductModel[] | null = null;
+	public featuredProducts: ProductModel[] | undefined | null;
 
 	constructor(private productService: ProductService, private cultureService: CultureService, private cdr: ChangeDetectorRef)
 	{
@@ -46,9 +43,14 @@ export class RecommendedProductsComponent implements OnInit
 
 	setFeaturedProducts()
 	{
-		this.productService.getFeaturedProducts().subscribe(result =>
+		this.subscription = this.productService.getFeaturedProducts().subscribe(result =>
 		{
-			this.featuredProducts = result;
+			this.featuredProducts = (result ? result : null);
 		});
+	}
+
+	ngOnDestroy()
+	{
+		this.subscription.unsubscribe();
 	}
 }

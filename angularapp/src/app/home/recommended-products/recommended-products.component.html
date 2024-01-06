@@ -1,24 +1,30 @@
-<h3 class="section-header">Recommended Products</h3>
-<div class="vgcarousel">
-	<div class="carousel-wrapper" *ngIf="carouselItems">
-		<ng-container *ngIf="carouselItems">
-			<vg-carousel
-				[items]="carouselItems"
-				[rtl]="currentLang.rtl"
-				[gap]="3"
-				[responsiveOptions]="responsiveOptions"
-			>
-				<div
-					class="card-wrapper"
-					*ngFor="let product of featuredProducts"
-					#carouselItems
+<h3 class="section-header" *ngIf="featuredProducts">Recommended Products</h3>
+<ng-container *ngIf="featuredProducts === undefined; else carousel">
+	<app-cards-placeholder></app-cards-placeholder>
+</ng-container>
+
+<ng-template #carousel>
+	<div class="vgcarousel">
+		<div class="carousel-wrapper" *ngIf="featuredProducts">
+			<ng-container *ngIf="featuredProducts">
+				<vg-carousel
+					[items]="carouselItems"
+					[rtl]="currentLang.rtl"
+					[gap]="3"
+					[responsiveOptions]="responsiveOptions"
 				>
-					<app-card
-						class="product-card"
-						[productData]="product"
-					></app-card>
-				</div>
-			</vg-carousel>
-		</ng-container>
+					<div
+						class="card-wrapper"
+						*ngFor="let product of featuredProducts"
+						#carouselItems
+					>
+						<app-card
+							class="product-card"
+							[productData]="product"
+						></app-card>
+					</div>
+				</vg-carousel>
+			</ng-container>
+		</div>
 	</div>
-</div>
+</ng-template>

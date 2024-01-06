@@ -11,8 +11,9 @@ using System.Text.Json.Serialization;
 using Volga.Core;
 using Volga.Core.Services;
 using Volga.Infrastructure;
+using Volga.Infrastructure.Data;
+using Volga.Infrastructure.Data.Models;
 using Volga.Infrastructure.Interfaces;
-using Volga.Infrastructure.Models;
 using Volga.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -123,7 +124,7 @@ builder.Services.AddLocalization(options => options.ResourcesPath = "Resources")
 
 builder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 builder.Services.AddTransient<AuthService>();
-builder.Services.AddSingleton(typeof(IRepository<>), typeof(BaseRepository<>));
+//builder.Services.AddSingleton(typeof(IGenericRepository<>), typeof(BaseRepository<>));
 
 //======================================
 
@@ -131,8 +132,7 @@ builder.Services.AddScoped<ProductService, ProductService>();
 builder.Services.AddScoped<CategoryService, CategoryService>();
 builder.Services.AddScoped<ProductRepository, ProductRepository>();
 builder.Services.AddScoped<IRepository<Category>, CategoryRepository>();
-
-
+builder.Services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
 // =====================================
 
 builder.Services.AddCors(options =>

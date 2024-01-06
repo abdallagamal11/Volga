@@ -1,160 +1,186 @@
-<form *ngIf="filtersForm" novalidate [formGroup]="filtersForm">
-	<div class="panel">
-		<p class="heading text-uppercase">Discount</p>
-		<div class="body">
-			<div class="form-check" formGroupName="discount">
-				<input
-					class="form-check-input"
-					type="checkbox"
-					id="showOnlyDiscount"
-					formControlName="showOnlyDiscountedItems"
-				/>
-				<label class="form-check-label" for="showOnlyDiscount">
-					Show only discounted items
-				</label>
-			</div>
-		</div>
-	</div>
-
-	<div class="panel">
-		<p class="heading text-uppercase">
-			Price
-			<span
-				*ngIf="
-					filtersForm.get('price')?.value &&
-					filtersForm.get('price')?.touched
-				"
-				class="reset-button-wrapper"
+<div class="accordion" id="accordionPanelsSideBar">
+	<form *ngIf="filtersForm" novalidate [formGroup]="filtersForm">
+		<div class="panel accordion-item">
+			<p class="heading accordion-header">
+				<button
+					class="text-uppercase"
+					type="button"
+					data-bs-toggle="collapse"
+					data-bs-target="#panelsDiscount-collapseOne"
+					aria-expanded="true"
+					aria-controls="panelsDiscount-collapseOne"
+				>
+					Discount
+				</button>
+			</p>
+			<div
+				class="body accordion-collapse collapse show"
+				id="panelsDiscount-collapseOne"
 			>
-				<button
-					class="btn btn-light"
-					(click)="filtersForm.controls['price'].reset()"
-				>
-					Reset
-				</button>
-			</span>
-		</p>
-		<div class="body">
-			<div formGroupName="price">
-				<input
-					class="form-control price-start"
-					type="number"
-					value=""
-					placeholder="Start"
-					formControlName="start"
-					(keypress)="preventNegativeFloat($event)"
-					(paste)="preventNegativeFloat($event)"
-				/>
-				-
-				<input
-					class="form-control price-end"
-					type="number"
-					value=""
-					placeholder="End"
-					formControlName="end"
-					(keypress)="preventNegativeFloat($event)"
-					(paste)="preventNegativeFloat($event)"
-				/>
-			</div>
-			<div class="mx-auto text-center mt-1">
-				<button
-					class="btn btn-primary vg-btn"
-					(click)="applyGroupByGroupName('price')"
-				>
-					Apply
-				</button>
-			</div>
-		</div>
-	</div>
-
-	<div class="panel">
-		<p class="heading text-uppercase">
-			Rating
-			<span
-				*ngIf="filtersForm.get('rating')?.get('showWithRating')?.value"
-				class="reset-button-wrapper"
-			>
-				<button
-					class="btn btn-light"
-					(click)="
-						filtersForm.controls['rating']
-							.get('showWithRating')
-							?.reset()
-					"
-				>
-					Reset
-				</button>
-			</span>
-		</p>
-		<div class="body" formGroupName="rating">
-			<div class="form-check" *ngFor="let i of [1, 2, 3, 4, 5]">
-				<input
-					class="form-check-input"
-					type="radio"
-					[value]="i"
-					id="showAboveRating{{ i }}"
-					formControlName="showWithRating"
-				/>
-				<label class="form-check-label" for="showAboveRating{{ i }}">
-					<ng-container *ngFor="let item of createRange(i)">
-						<i class="bi bi-star-fill text-primary"></i>
-					</ng-container>
-					<span *ngIf="i == 5"> Only</span>
-					<span *ngIf="i < 5"> & Above</span>
-				</label>
-			</div>
-		</div>
-	</div>
-
-	<div class="panel" *ngIf="sellers">
-		<p class="heading text-uppercase">Sellers</p>
-		<div class="body" formGroupName="seller">
-			<div class="sellers">
-				<div
-					class="form-check"
-					*ngFor="let seller of sellers"
-					formArrayName="sellers"
-				>
+				<div class="form-check" formGroupName="discount">
 					<input
 						class="form-check-input"
 						type="checkbox"
-						id="seller-{{ seller[0] }}"
-						[value]="seller[0]"
-						[checked]="getSellerFormControl(seller[0])"
-						(change)="onSellerCheckChanged($event)"
+						id="showOnlyDiscount"
+						formControlName="showOnlyDiscountedItems"
 					/>
-					<label
-						class="form-check-label"
-						for="seller-{{ seller[0] }}"
-						>{{ seller[1] }}</label
-					>
+					<label class="form-check-label" for="showOnlyDiscount">
+						Show only discounted items
+					</label>
 				</div>
 			</div>
-			<div class="mx-auto text-center mt-1">
+		</div>
+
+		<div class="panel accordion-item">
+			<p class="heading accordion-header">
 				<button
-					class="btn btn-primary vg-btn"
-					(click)="applyGroupByGroupName('seller')"
+					class="text-uppercase"
+					type="button"
+					data-bs-toggle="collapse"
+					data-bs-target="#panelsPrice-collapseOne"
+					aria-expanded="true"
+					aria-controls="panelsPrice-collapseOne"
 				>
-					Apply
+					Price
+				</button>
+			</p>
+			<div
+				class="body accordion-collapse collapse show"
+				id="panelsPrice-collapseOne"
+			>
+				<div formGroupName="price">
+					<input
+						class="form-control price-start"
+						type="number"
+						value=""
+						placeholder="Start"
+						formControlName="start"
+						(keypress)="preventNegativeFloat($event)"
+						(paste)="preventNegativeFloat($event)"
+					/>
+					-
+					<input
+						class="form-control price-end"
+						type="number"
+						value=""
+						placeholder="End"
+						formControlName="end"
+						(keypress)="preventNegativeFloat($event)"
+						(paste)="preventNegativeFloat($event)"
+					/>
+				</div>
+				<div class="mx-auto text-center mt-1">
+					<button
+						class="btn btn-primary vg-btn"
+						(click)="applyGroupByGroupName('price')"
+					>
+						Apply
+					</button>
+				</div>
+				<button
+					class="reset-button"
+					[ngClass]="{ active: filtersForm.get('price')?.touched }"
+					(click)="filtersForm.controls['price'].reset()"
+				>
+					<i class="bi bi-arrow-counterclockwise"></i>
 				</button>
 			</div>
 		</div>
-	</div>
 
-	<div class="panel">
-		<p class="heading text-uppercase">Stock</p>
-		<div class="body">
-			<div class="form-check" formGroupName="stock">
-				<input
-					class="form-check-input"
-					type="checkbox"
-					id="showOutOfStock"
-					formControlName="includeOutOfStock"
-				/>
-				<label class="form-check-label" for="showOutOfStock">
-					Show Out Of Stock?
-				</label>
+		<div class="panel">
+			<p class="heading text-uppercase">
+				Rating
+				<span
+					*ngIf="
+						filtersForm.get('rating')?.get('showWithRating')?.value
+					"
+					class="reset-button-wrapper"
+				>
+					<button
+						class="btn btn-light"
+						(click)="
+							filtersForm.controls['rating']
+								.get('showWithRating')
+								?.reset()
+						"
+					>
+						Reset
+					</button>
+				</span>
+			</p>
+			<div class="body" formGroupName="rating">
+				<div class="form-check" *ngFor="let i of [1, 2, 3, 4, 5]">
+					<input
+						class="form-check-input"
+						type="radio"
+						[value]="i"
+						id="showAboveRating{{ i }}"
+						formControlName="showWithRating"
+					/>
+					<label
+						class="form-check-label"
+						for="showAboveRating{{ i }}"
+					>
+						<ng-container *ngFor="let item of createRange(i)">
+							<i class="bi bi-star-fill text-primary"></i>
+						</ng-container>
+						<span *ngIf="i == 5"> Only</span>
+						<span *ngIf="i < 5"> & Above</span>
+					</label>
+				</div>
 			</div>
 		</div>
-	</div>
-</form>
+
+		<div class="panel" *ngIf="sellers">
+			<p class="heading text-uppercase">Sellers</p>
+			<div class="body" formGroupName="seller">
+				<div class="sellers">
+					<div
+						class="form-check"
+						*ngFor="let seller of sellers"
+						formArrayName="sellers"
+					>
+						<input
+							class="form-check-input"
+							type="checkbox"
+							id="seller-{{ seller[0] }}"
+							[value]="seller[0]"
+							[checked]="getSellerFormControl(seller[0])"
+							(change)="onSellerCheckChanged($event)"
+						/>
+						<label
+							class="form-check-label"
+							for="seller-{{ seller[0] }}"
+							>{{ seller[1] }}</label
+						>
+					</div>
+				</div>
+				<div class="mx-auto text-center mt-1">
+					<button
+						class="btn btn-primary vg-btn"
+						(click)="applyGroupByGroupName('seller')"
+					>
+						Apply
+					</button>
+				</div>
+			</div>
+		</div>
+
+		<div class="panel">
+			<p class="heading text-uppercase">Stock</p>
+			<div class="body">
+				<div class="form-check" formGroupName="stock">
+					<input
+						class="form-check-input"
+						type="checkbox"
+						id="showOutOfStock"
+						formControlName="includeOutOfStock"
+					/>
+					<label class="form-check-label" for="showOutOfStock">
+						Show Out Of Stock?
+					</label>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>

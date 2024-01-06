@@ -1,0 +1,157 @@
+.main-img
+{
+	position: relative;
+	overflow: hidden;
+}
+
+.discount-badge
+{
+	background-color: var(--bs-red);
+	padding: 0.25em 0.5em;
+	position: absolute;
+	top: 1em;
+	left: 0;
+	font-weight: bold;
+	color: var(--bs-light);
+	user-select: none;
+	border-radius: 0.4em;
+}
+
+
+.star-bg
+{
+	top: 1em;
+	right: 0.5em;
+	position: absolute;
+	background-color: #e6effb;
+	padding: 0.25em;
+	border-radius: 50%;
+	width: 1.5em;
+	height: 1.5em;
+	cursor: pointer;
+}
+
+.star-bg::after
+{
+	padding: 0;
+	margin: 0;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%) translate(.05pt, -.008pt);
+	user-select: none;
+	position: absolute;
+	content: "\F588";
+	font-family: "bootstrap-icons";
+	color: #1071ff;
+	font-weight: 500;
+	line-height: normal;
+}
+
+.star-bg:hover::after
+{
+	content: "\F586";
+}
+
+.product-vendor
+{
+	color: #6c757d;
+	margin-bottom: 0.5em;
+}
+
+.thumbnails img.active
+{
+	border: 1px solid var(--bs-blue);
+}
+
+
+.bi.dropdown-toggle::after
+{
+	display: none;
+	display: inline-block;
+	margin-left: 0em;
+	vertical-align: 0em;
+	content: "";
+	border-top: 0;
+	border-right: 0;
+	border-bottom: 0;
+	border-left: 0;
+}
+
+.star .bi
+{
+	list-style: none;
+	display: inline-block;
+	color: #ffa51d;
+	font-size: 1.5em;
+}
+
+.star .bi::before
+{
+	-webkit-text-stroke: 0.2pt #000;
+	/*e17d22*/
+}
+
+span.stars + span
+{
+	margin-inline-start: 0.3em;
+	font-size: 1.15em;
+	vertical-align: 0.1em;
+}
+
+
+.in-stock-badge
+{
+	color: var(--bs-green);
+	font-weight: bold;
+	user-select: none;
+}
+
+.out-of-stock-badge
+{
+	color: var(--bs-red);
+	font-weight: bold;
+	user-select: none;
+}
+
+.product-price
+{
+	color: var(--bs-blue);
+	font-size: 1.5em;
+	font-weight: 500;
+	margin-top: 5px;
+	flex: 1 0;
+	display: flex;
+}
+
+.product-old-price-wrapper
+{
+	font-size: 0.5em;
+	color: var(--bs-orange);
+	user-select: none;
+}
+
+.product-old-price-wrapper .old-price
+{
+	text-decoration: line-through;
+}
+
+@media screen and (max-width: 768px)
+{
+	.thumbnails
+	{
+		max-width: 100px;
+	}
+}
+
+.tab-content
+{
+	background-color: #E6EFFB;
+	padding: .5em;
+}
+
+.tab-content .wrapper
+{
+	border-radius: 10px;
+	background-color: #fff;
+	padding: .5em;
+}

@@ -1,5 +1,5 @@
-<section class="shopby-category" *ngIf="parentCategories">
-	<h3 class="section-header">Shop By Category</h3>
+<section class="shopby-category">
+	<h3 class="section-header" *ngIf="parentCategories">Shop By Category</h3>
 	<div class="category-cards row g-2">
 		<div
 			class="category-card col-6 col-md-4 col-lg-3"
@@ -10,6 +10,9 @@
 			></app-children-categories-card>
 		</div>
 	</div>
+	<ng-container *ngIf="parentCategories === undefined">
+		<app-cards-placeholder [small]="true"></app-cards-placeholder>
+	</ng-container>
 </section>
 
 <section class="recommended-products">

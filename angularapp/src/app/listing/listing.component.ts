@@ -37,6 +37,7 @@ export class ListingComponent implements OnChanges
 	pageList: number[] = [];
 	sortOptions: { key: number, value: string }[] = Object.entries(ProductSort).filter(elm => !isNaN(Number(elm[1]))).map(elm => { return { key: parseInt(elm[1].toString()), value: elm[0].toString() }; });
 	@Input() sort: ProductSort | undefined;
+	@Input() loading: boolean = false;
 	currentSortIndex: number = 0;
 
 	constructor(private categoryService: CategoryService)

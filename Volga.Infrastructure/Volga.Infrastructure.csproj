@@ -7,6 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Interfaces\IGenericRepository.cs" />
+    <Compile Remove="Repositories\GenericRepository.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="microsoft.aspnetcore.authentication.jwtbearer" Version="7.0.13" />
     <PackageReference Include="microsoft.aspnetcore.identity" Version="2.2.0" />
     <PackageReference Include="microsoft.aspnetcore.identity.entityframeworkcore" Version="7.0.13" />

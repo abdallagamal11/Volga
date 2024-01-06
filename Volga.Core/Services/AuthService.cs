@@ -5,9 +5,9 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Volga.Core.Dtos.User;
+using Volga.Infrastructure.Dtos.User;
 using Volga.Core.Utilities;
-using Volga.Infrastructure.Models;
+using Volga.Infrastructure.Data.Models;
 
 namespace Volga.Core.Services;
 

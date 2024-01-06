@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Volga.Core.Dtos;
-using Volga.Core.Dtos.ProductListing;
 using Volga.Core.Enums;
-using Volga.Infrastructure;
-using Volga.Infrastructure.Models;
+using Volga.Infrastructure.Data;
+using Volga.Infrastructure.Data.Models;
+using Volga.Infrastructure.Dtos;
+using Volga.Infrastructure.Dtos.ProductListing;
 using Volga.Infrastructure.Repositories;
 
 namespace Volga.Core.Services;
@@ -18,17 +18,17 @@ public class ProductService
 		_context = context;
 	}
 
-	public async Task<ProductListPageDto<ProductDto>?> GetProductsByCategoryId(int? categoryId, ProductSort? sort = null, int? take = null, int? skip = null, ProductFilterDto? productFilter = null)
+	public async Task<ProductListPageDto?> GetProductsByCategoryId(int? categoryId, ProductSort? sort = null, int? take = null, int? skip = null, ProductFilterDto? productFilter = null)
 	{
 		if (categoryId == null) return null;
 		IQueryable<Product> queryable = _productRepository.GetAllRaw()
 			.Where(p => p.CategoryId == categoryId)
 			.Include(p => p.Vendor);
 
-		Dictionary<int, string> vendors = await queryable
-		.Select(p => new { Id = p.VendorId, Name = p.Vendor.Name })
-		.Distinct()
-		.ToDictionaryAsync(v => v.Id, v => v.Name);
+		//Dictionary<int, string> vendors = await queryable
+		//.Select(p => new { Id = p.VendorId, Name = p.Vendor.Name })
+		//.Distinct()
+		//.ToDictionaryAsync(v => v.Id, v => v.Name);
 
 		//if (includeOutOfStock == false) queryable = queryable.Where(p => p.Stock > 0);
 		queryable = resolveProductsFilters(queryable, productFilter);
@@ -56,14 +56,14 @@ public class ProductService
 		if (query == null) return null;
 
 
-		var pagedDataDto = new ProductListPageDto<ProductDto>()
+		var pagedDataDto = new ProductListPageDto()
 		{
 			Data = await query.ToListAsync(),
 			Pagination = new PaginationDto()
 			{
 				totalRecords = queryable.Count()
 			},
-			Sellers = vendors
+			//			Sellers = vendors
 		};
 
 		return pagedDataDto;
@@ -138,9 +138,12 @@ public class ProductService
 				VendorName = p.Vendor.Name,
 				RatingCount = p.RatingCount,
 				RatingSum = p.RatingSum,
-			});
+				Views = p.Views,
+				Sales = p.Sales
+			})
+			.Where(p => p.Stock > 0);
 		if (categoryId > 0) query = query.Where(p => p.CategoryId == categoryId);
-		query = query.OrderByDescending(p => p.RatingCount * p.RatingSum);
+		query = query.OrderByDescending(p => (p.RatingCount * p.RatingSum) * .7 + p.Views * .5 + p.Sales);
 		if (take > 0) query = query.Take(take);
 
 		productList = await query.ToListAsync();

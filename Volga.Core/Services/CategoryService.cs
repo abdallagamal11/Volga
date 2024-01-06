@@ -1,93 +1,57 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Volga.Core.Dtos;
+﻿using Volga.Infrastructure;
+using Volga.Infrastructure.Data.Models;
+using Volga.Infrastructure.Dtos;
+using Volga.Infrastructure.EntityDtoMappers;
 using Volga.Infrastructure.Interfaces;
-using Volga.Infrastructure.Models;
 
 namespace Volga.Core.Services;
 
 public class CategoryService
 {
-	IRepository<Category> _categoryRepository;
-	public CategoryService(IRepository<Category> categoryRepository)
+	ICategoryRepository _categoryRepository;
+	private readonly IUnitOfWork _unitOfWork;
+
+	public CategoryService(IUnitOfWork unitOfWork)
 	{
-		_categoryRepository = categoryRepository;
+		_unitOfWork = unitOfWork;
+		_categoryRepository = _unitOfWork.CategoryRepository;
 	}
 
-	public List<CategoryDto> GetAllCategories()
+	/*
+	 * List all
+	 */
+	public async Task<List<CategoryDto>> GetAllCategoriesAsync()
 	{
-		return _categoryRepository.GetAllRaw().Select(c => new CategoryDto()
-		{
-			Id = c.Id,
-			parentId = c.parentId,
-			Name = c.Name,
-			Description = c.Description,
-			ImgUrl = c.ImgUrl,
-		}).AsNoTracking().ToList();
+		return CategoryDtoMapper.CategoryListToDto(await _categoryRepository.GetAllAsync());
 	}
 
-	public List<CategoryDto>? GetParentCategories()
+	public async Task<IEnumerable<CategoryDto>?> GetParentCategoriesAsync()
 	{
-		return _categoryRepository.GetAllRaw()
-		.Where(c => c.parentId == null)
-		.Select(c => new CategoryDto()
-		{
-			Id = c.Id,
-			Name = c.Name,
-			Description = c.Description,
-			ImgUrl = c.ImgUrl,
-		}).AsNoTracking().ToList();
+		return CategoryDtoMapper.CategoryListToDto(await _categoryRepository.GetParentCategoriesAsync());
 	}
 
-	public List<CategoryDto>? GetChildCategories(int parentId)
+	public async Task<List<CategoryDto>?> GetChildCategoriesAsync(int parentId)
 	{
-		return _categoryRepository.GetAllRaw()
-		.Where(c => c.parentId == parentId)
-		.Select(c => new CategoryDto()
-		{
-			Id = c.Id,
-			Name = c.Name,
-			Description = c.Description,
-			ImgUrl = c.ImgUrl,
-		}).AsNoTracking().ToList();
+		return CategoryDtoMapper.CategoryListToDto(await _categoryRepository.GetChildrenByParentIdAsync(parentId));
 	}
 
-	public CategoryDto? GetCategoryById(int categoryId)
+	public async Task<CategoryDto?> GetCategoryByIdAsync(int categoryId)
+	{
+		Category? category = await _categoryRepository.FindAsync(c => c.Id == categoryId);
+		if (category == null) return null;
+
+		return CategoryDtoMapper.CategoryToDto(category);
+	}
+
+	public async Task<CategoryDto?> GetCategoryByIdWithChildrenAsync(int categoryId)
 	{
 		Category? category = _categoryRepository.Find(c => c.Id == categoryId);
 		if (category == null) return null;
 
-		return new CategoryDto()
-		{
-			Id = category.Id,
-			parentId = category.parentId,
-			Name = category.Name,
-			Description = category.Description,
-			ImgUrl = category.ImgUrl,
-		};
+		IEnumerable<Category>? children = await _categoryRepository.FindAllAsync(c => c.parentId == categoryId);
+
+		return CategoryDtoMapper.CategoryToDto(category, ChildCategories: children);
 	}
 
-	public CategoryDto? GetCategoryByIdWithChildren(int categoryId)
-	{
-		Category? category = _categoryRepository.Find(c => c.Id == categoryId);
-		if (category == null) return null;
 
-		var children = _categoryRepository.GetAllRaw().Where(c => c.parentId == categoryId).Select(c => new CategoryDto()
-		{
-			Id = c.Id,
-			parentId = c.parentId,
-			Name = c.Name,
-			Description = c.Description,
-			ImgUrl = c.ImgUrl,
-		}).ToList();
-
-		return new CategoryDto()
-		{
-			Id = category.Id,
-			parentId = category.parentId,
-			Name = category.Name,
-			Description = category.Description,
-			ImgUrl = category.ImgUrl,
-			ChildCategories = children
-		};
-	}
 }

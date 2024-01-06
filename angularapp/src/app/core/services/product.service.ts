@@ -19,22 +19,7 @@ export class ProductService
 	getFeaturedProducts(): Observable<ProductModel[] | null>
 	{
 		return this.http.get<ProductModel[] | null>(environment.apiUrl + '/product/recommended').pipe(
-			map(result =>
-			{
-				if (result != null)
-					result.map(item =>
-					{
-						item.priceAfterDiscount = 0;
-						if (item.discount > 0)
-						{
-							item.priceAfterDiscount = item.price * (1 - item.discount / 100);
-						}
-						item.rating = this.calcRating(item.ratingCount, item.ratingSum);
-						item.ratingStars = this.roundRatingForStars(item.rating);
-					});
-
-				return result;
-			}),
+			map(result => (result ? result.map(item => this.processProductData(item)) : result)),
 			catchError(error => throwError(() => error))
 		);
 	}
@@ -67,9 +52,6 @@ export class ProductService
 		if (!page) page = 1;
 		let take: number = environment.productList.productsPerPage;
 		let skip: number = ((page - 1) * environment.productList.productsPerPage);
-		// page = 2;
-		// take = 1;
-		// skip = 1;
 
 		let params = {
 			sort: sort,
@@ -82,21 +64,47 @@ export class ProductService
 				map(result =>
 				{
 					if (!result || !result.data) return null;
-					result.data.map(item =>
-					{
-						item.priceAfterDiscount = 0;
-						if (item.discount > 0)
-						{
-							item.priceAfterDiscount = item.price * (1 - item.discount / 100);
-						}
-						item.rating = this.calcRating(item.ratingCount, item.ratingSum);
-						item.ratingStars = this.roundRatingForStars(item.rating);
-					});
+					result.data.map(item => this.processProductData(item));
 					return result;
 				}),
 				catchError(err =>
 				{
 					return of(null);
 				}));
+	}
+
+	getVendorsByFilters(categoryId: number, filters: PartOf<object> | null | undefined = null): Observable<object | null>
+	{
+		return this.http.post<object | null>(environment.apiUrl + '/vendor/get/', filters, { params: { categoryId: categoryId } })
+			.pipe(
+				map(result =>
+				{
+					return result;
+				}),
+				catchError(err =>
+				{
+					return of(null);
+				}));
+	}
+
+	processProductData(item: ProductModel): ProductModel
+	{
+		item.priceAfterDiscount = item.price;
+		if (item.discount > 0)
+		{
+			item.priceAfterDiscount = item.price * (1 - item.discount / 100);
+		}
+		item.rating = this.calcRating(item.ratingCount, item.ratingSum);
+		item.ratingStars = this.roundRatingForStars(item.rating);
+		return item;
+	}
+
+	getProductById(id: number | undefined): Observable<ProductModel | null>
+	{
+		if (!id || isNaN(id)) return of(null);
+		return this.http.get<ProductModel | null>(environment.apiUrl + '/product/' + id).pipe(
+			map(result => (result ? this.processProductData(result) : result)),
+			catchError(error => throwError(() => error))
+		);
 	}
 }

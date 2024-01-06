@@ -30,6 +30,7 @@ export class CategoryComponent implements OnInit, OnDestroy
 	pagination: PaginationModel | undefined;
 	sellers: object | undefined;
 	category: CategoryModel | undefined;
+	loading: boolean = false;
 
 	constructor(private routedData: ActivatedRoute, private categoryService: CategoryService, private productService: ProductService)
 	{
@@ -57,6 +58,7 @@ export class CategoryComponent implements OnInit, OnDestroy
 
 	getProductsData()
 	{
+		this.loading = true;
 		if (this.id)
 		{
 			this.categoryService.getChildrenCategories(this.id).subscribe(result =>
@@ -71,7 +73,8 @@ export class CategoryComponent implements OnInit, OnDestroy
 			this.productService.getPagedProductsByCategory(this.id, this.page, this.sort, this.filters)
 				.subscribe(result =>
 				{
-					// console.log(result);
+					this.loading = false;
+					console.log(result);
 					if (result)
 					{
 						this.products = result.data;

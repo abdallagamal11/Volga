@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
+using Volga.Infrastructure.Data;
 using Volga.Infrastructure.Interfaces;
 
 namespace Volga.Infrastructure.Repositories;
@@ -16,11 +17,11 @@ public class BaseRepository<T> : IRepository<T> where T : class
 	// GET ALL
 	public List<T> GetAll()
 	{
-		return context.Set<T>().ToList();
+		return context.Set<T>().AsNoTracking().ToList();
 	}
 	public async Task<IEnumerable<T>> GetAllAsync()
 	{
-		return await context.Set<T>().ToListAsync();
+		return await context.Set<T>().AsNoTracking().ToListAsync();
 	}
 
 	// GET BY ID
@@ -36,7 +37,7 @@ public class BaseRepository<T> : IRepository<T> where T : class
 	// FIND BY CRITERIA
 	public T? Find(Expression<Func<T, bool>> criteria, string[]? includes)
 	{
-		IQueryable<T> query = context.Set<T>();
+		IQueryable<T> query = context.Set<T>().AsNoTracking();
 
 		if (includes != null)
 			foreach (var include in includes)
@@ -47,7 +48,7 @@ public class BaseRepository<T> : IRepository<T> where T : class
 
 	public async Task<T?> FindAsync(Expression<Func<T, bool>> criteria, string[]? includes = null)
 	{
-		IQueryable<T> query = context.Set<T>();
+		IQueryable<T> query = context.Set<T>().AsNoTracking();
 
 		if (includes != null)
 			foreach (var include in includes)
@@ -59,7 +60,7 @@ public class BaseRepository<T> : IRepository<T> where T : class
 	// FIND ALL BY CRITERIA
 	public IEnumerable<T> FindAll(Expression<Func<T, bool>> criteria, string[]? includes = null)
 	{
-		IQueryable<T> query = context.Set<T>();
+		IQueryable<T> query = context.Set<T>().AsNoTracking();
 		if (includes != null)
 			foreach (var include in includes)
 				query.Include(include);
@@ -68,7 +69,7 @@ public class BaseRepository<T> : IRepository<T> where T : class
 
 	public async Task<IEnumerable<T>> FindAllAsync(Expression<Func<T, bool>> criteria)
 	{
-		IQueryable<T> query = context.Set<T>();
+		IQueryable<T> query = context.Set<T>().AsNoTracking();
 
 		return await query.Where(criteria).ToListAsync();
 	}

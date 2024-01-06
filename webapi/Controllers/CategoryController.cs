@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Volga.Core.Dtos;
 using Volga.Core.Services;
+using Volga.Infrastructure.Dtos;
 
 namespace webapi.Controllers;
 
@@ -13,37 +13,38 @@ public class CategoryController : BaseAPIController
 	}
 
 	[HttpGet("all")]
-	public IActionResult GetAll()
+	[ProducesResponseType(200)]
+	public async Task<IActionResult> GetAll()
 	{
-		return Ok(_categoryService.GetAllCategories());
+		return Ok(await _categoryService.GetAllCategoriesAsync());
 	}
 
 	[HttpGet("{id}")]
-	public IActionResult Get(int? id)
+	[ProducesResponseType(200)]
+	[ProducesResponseType(404)]
+	public async Task<IActionResult> Get(int id, bool includeSubcategories = false)
 	{
-		if (id == null) return NotFound();
-		CategoryDto? categoryDto = _categoryService.GetCategoryById((int)id);
+		CategoryDto? categoryDto;
+		if (!includeSubcategories)
+			categoryDto = await _categoryService.GetCategoryByIdAsync(id);
+		else
+			categoryDto = await _categoryService.GetCategoryByIdWithChildrenAsync(id);
+
 		if (categoryDto == null) return NotFound();
 		return Ok(categoryDto);
 	}
 
-	[HttpGet("withChildren/{id}")]
-	public IActionResult GetWithChildren(int? id)
+	[HttpGet("top-level")]
+	[ProducesResponseType(200)]
+	public async Task<IActionResult> GetAllParent()
 	{
-		if (id == null) return BadRequest();
-		return Ok(_categoryService.GetCategoryByIdWithChildren((int)id));
+		return Ok(await _categoryService.GetParentCategoriesAsync());
 	}
 
-	[HttpGet("parentAll")]
-	public IActionResult GetAllParent()
+	[HttpGet("{id}/subcategories")]
+	[ProducesResponseType(200)]
+	public async Task<IActionResult> GetAllChildren(int id)
 	{
-		return Ok(_categoryService.GetParentCategories());
-	}
-
-	[HttpGet("childrenAll")]
-	public IActionResult GetAllChildren(int? id)
-	{
-		if (id == null) return BadRequest();
-		return Ok(_categoryService.GetChildCategories((int)id));
+		return Ok(await _categoryService.GetChildCategoriesAsync(id));
 	}
 }

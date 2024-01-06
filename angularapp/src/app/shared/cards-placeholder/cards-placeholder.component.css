@@ -1,0 +1,49 @@
+.vg-placeholder
+{
+	height: 400px;
+	width: 100%;
+	position: relative;
+	overflow: hidden;
+}
+
+.placeholder-wrapper::after
+{
+	position: absolute;
+	content: '';
+	/* background-image: linear-gradient(transparent, transparent, white); */
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 400px;
+}
+
+.small
+{
+	height: 200px;
+	overflow: hidden;
+}
+
+.card-top
+{
+	overflow: hidden;
+	border: 1px solid transparent;
+	border-radius: 15px 15px 0 0;
+	margin-bottom: 2px;
+}
+
+.card-top .placeholder
+{
+	height: 150px;
+}
+
+.card-body
+{
+	overflow: hidden;
+	border: 1px solid transparent;
+	border-radius: 0 0 15px 15px;
+}
+
+.card-body .placeholder
+{
+	height: 50px;
+}

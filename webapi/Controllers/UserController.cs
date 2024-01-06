@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
-using Volga.Core.Dtos.User;
 using Volga.Core.Services;
 using Volga.Core.Validators.Attributes;
+using Volga.Infrastructure.Dtos.User;
 
 namespace webapi.Controllers;
 

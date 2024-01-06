@@ -4,11 +4,13 @@ import { TranslateModule } from '@ngx-translate/core';
 import { RouterModule } from '@angular/router';
 import { ChildrenCategoriesCardComponent } from './children-categories-card/children-categories-card.component';
 import { CardComponent } from './card/card.component';
+import { CardsPlaceholderComponent } from './cards-placeholder/cards-placeholder.component';
 
 @NgModule({
 	declarations: [
 		CardComponent,
-		ChildrenCategoriesCardComponent
+		ChildrenCategoriesCardComponent,
+		CardsPlaceholderComponent
 	],
 	imports: [
 		CommonModule,
@@ -17,7 +19,8 @@ import { CardComponent } from './card/card.component';
 	],
 	exports: [
 		ChildrenCategoriesCardComponent,
-		CardComponent
+		CardComponent,
+		CardsPlaceholderComponent
 	]
 })
 export class SharedModule { }

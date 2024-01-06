@@ -13,16 +13,17 @@ export class CategoryService
 
 	getParentCategories(): Observable<CategoryModel[] | null>
 	{
-		return this.http.get<CategoryModel[] | null>(environment.apiUrl + '/category/parentAll');
+		return this.http.get<CategoryModel[] | null>(environment.apiUrl + '/category/top-level');
 	}
 
 	getChildrenCategories(id: number): Observable<CategoryModel[] | null>
 	{
-		return this.http.get<CategoryModel[] | null>(environment.apiUrl + '/category/childrenAll', { params: { id: id } });
+		return this.http.get<CategoryModel[] | null>(`${environment.apiUrl}/category/${id}/subcategories`);
 	}
 
 	getCategoryWithChildren(id: number): Observable<CategoryModel | null>
 	{
-		return this.http.get<CategoryModel | null>(environment.apiUrl + '/category/withChildren/' + id);
+		let params: {} = { includeSubcategories: true };
+		return this.http.get<CategoryModel | null>(`${environment.apiUrl}/category/${id}`, { params: params });
 	}
 }

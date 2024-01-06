@@ -1,4 +1,4 @@
-import { AfterContentChecked, AfterContentInit, AfterViewChecked, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostListener, Input, OnDestroy, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterViewChecked, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostListener, Input, OnDestroy, ViewChild, ViewEncapsulation } from '@angular/core';
 
 @Component({
 	selector: 'vg-carousel',
@@ -7,18 +7,14 @@ import { AfterContentChecked, AfterContentInit, AfterViewChecked, AfterViewInit,
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	encapsulation: ViewEncapsulation.None,
 })
-export class CarouselComponent implements AfterViewInit, AfterViewChecked, OnDestroy
+export class CarouselComponent implements OnDestroy, AfterViewChecked //AfterViewInit
 {
-	@Input() set items(value: ElementRef[] | undefined)
-	{
-		if (value === undefined) return;
-		this.carouselItems = value;
-		this.cdr.detectChanges();
-	}
-
 	carouselItems: ElementRef[] | undefined;
 	@Input() numVisible = 3;
 	@Input() numScroll = 3;
+	@Input() gap: number = 10;
+	@Input() responsiveOptions: { [k: number]: { [k: string]: number } } | undefined;
+	@Input() rtl: boolean = false;
 	@ViewChild('carouselWrapper') carouselWrapper!: ElementRef;
 	@ViewChild('carouselMainLine') carouselMainLine!: ElementRef;
 	private tranlateXValue: number = 0;
@@ -27,9 +23,13 @@ export class CarouselComponent implements AfterViewInit, AfterViewChecked, OnDes
 	protected numPages: number = 0;
 	loop: boolean = true;
 	protected loaded: boolean = false;
-	@Input() gap: number = 10;
-	@Input() responsiveOptions: { [k: number]: { [k: string]: number } } | undefined;
-	@Input() rtl: boolean = false;
+
+	@Input() set items(value: ElementRef[] | undefined)
+	{
+		if (value === undefined) return;
+		this.carouselItems = value;
+		this.cdr.detectChanges();
+	}
 
 	constructor(private el: ElementRef, private cdr: ChangeDetectorRef)
 	{
@@ -45,16 +45,19 @@ export class CarouselComponent implements AfterViewInit, AfterViewChecked, OnDes
 		this.updateUi();
 		this.calculatePosition(false);
 		this.cdr.detectChanges();
+		this.loaded = true;
 	}
 
-
-
-	ngAfterViewInit()
-	{
-		this.updateUi();
-		this.calculatePosition(false);
-		this.cdr.detectChanges();
-	}
+	// ngAfterViewInit()
+	// {
+	// 	this.updateUi();
+	// 	this.calculatePosition(false);
+	// 	this.cdr.detectChanges();
+	// 	setTimeout(() =>
+	// 	{
+	// 		this.adjustSize();
+	// 	}, 250);
+	// }
 
 	ngAfterViewChecked()
 	{
@@ -113,7 +116,6 @@ export class CarouselComponent implements AfterViewInit, AfterViewChecked, OnDes
 		});
 		this.numPages = Math.ceil((this.carouselItems!.length - this.numVisible) / this.numScroll + 1);
 
-		this.loaded = true;
 		this.calculatePosition();
 	}
 
